@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#050a14"/>
+      <stop offset="100%" style="stop-color:#0a1628"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4CC77C"/>
+      <stop offset="100%" style="stop-color:#7DDBA3"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Glow blobs -->
+  <circle cx="200" cy="150" r="200" fill="#4CC77C" opacity="0.08"/>
+  <circle cx="1000" cy="480" r="250" fill="#7DDBA3" opacity="0.06"/>
+  <!-- Terminal window frame -->
+  <rect x="200" y="140" width="800" height="350" rx="16" fill="#1F2733" stroke="#4CC77C" stroke-opacity="0.2" stroke-width="1"/>
+  <!-- Terminal title bar -->
+  <rect x="200" y="140" width="800" height="40" rx="16" fill="#1F2733"/>
+  <rect x="200" y="164" width="800" height="16" fill="#1F2733"/>
+  <!-- Traffic lights -->
+  <circle cx="228" cy="160" r="6" fill="#FF5F56" opacity="0.8"/>
+  <circle cx="248" cy="160" r="6" fill="#FFBD2E" opacity="0.8"/>
+  <circle cx="268" cy="160" r="6" fill="#27C93F" opacity="0.8"/>
+  <!-- Terminal title -->
+  <text x="600" y="165" text-anchor="middle" font-family="monospace" font-size="13" fill="#4CC77C" font-weight="600">FormatMD</text>
+  <!-- Markdown content lines -->
+  <text x="232" y="216" font-family="monospace" font-size="18" fill="#4CC77C" font-weight="700"># Paste. Style. Export.</text>
+  <text x="232" y="252" font-family="monospace" font-size="15" fill="#ffffff" opacity="0.7">Transform markdown into beautifully</text>
+  <text x="232" y="276" font-family="monospace" font-size="15" fill="#ffffff" opacity="0.7">styled, copy-ready output.</text>
+  <text x="232" y="316" font-family="monospace" font-size="15" fill="#7DDBA3">- **Rich copy** to clipboard</text>
+  <text x="232" y="344" font-family="monospace" font-size="15" fill="#7DDBA3">- **Export** as .md .html .pdf .txt</text>
+  <text x="232" y="372" font-family="monospace" font-size="15" fill="#7DDBA3">- **Themes** for dark &amp; light mode</text>
+  <!-- Cursor blink -->
+  <rect x="232" y="396" width="10" height="20" fill="#4CC77C" opacity="0.8"/>
+  <!-- Bottom branding -->
+  <text x="600" y="560" text-anchor="middle" font-family="'Poppins', sans-serif" font-size="42" fill="url(#accent)" font-weight="700">FormatMD</text>
+  <text x="600" y="592" text-anchor="middle" font-family="monospace" font-size="16" fill="#ffffff" opacity="0.4">Markdown Formatter &amp; Styler by InfinitiGRID</text>
+</svg>
