@@ -47,6 +47,15 @@ const Footer = ({ themeId = 'infiniti', onFeedbackClick }: FooterProps) => {
           >
             Home
           </Link>
+          <Link
+            to="/docs"
+            className="text-xs font-mono transition-colors duration-200 hover:underline"
+            style={{ color: theme.colors.text + '78' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = theme.colors.heading)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = theme.colors.text + '78')}
+          >
+            Docs
+          </Link>
           <button
             type="button"
             onClick={onFeedbackClick}

@@ -105,7 +105,7 @@ const Index = () => {
 
       <SEOHead
         title="FormatMD — Markdown Formatter & Styler"
-        description="FormatMD transforms your markdown into beautifully styled, copy-ready output. Paste, format, and export in .md, .pdf, .html, .txt."
+        description="FormatMD transforms your markdown into beautifully styled, copy-ready output. Paste, format, and export in .md, skill.MD, .html, .txt, or print-to-PDF."
         path="/"
       />
 

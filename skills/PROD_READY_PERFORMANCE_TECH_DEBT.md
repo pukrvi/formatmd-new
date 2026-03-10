@@ -7,15 +7,12 @@
 
 ## QA Run Status (This Session)
 
-Attempted full QA commands across the whole codebase:
+- `npm run lint` -> passed (0 errors, 2 non-blocking warnings in UI primitives)
+- `npm run test` -> passed (`src/lib/themes.test.ts`, 3 tests)
+- `npm run build` -> passed (chunk-size warning on main bundle, non-blocking)
 
-- `npm run lint` -> `zsh:1: command not found: npm`
-- `npm run test` -> `zsh:1: command not found: npm`
-- `npm run build` -> `zsh:1: command not found: npm`
+Static QA findings:
 
-Static QA findings run successfully:
-
-- No test files currently present under `src/`.
 - `dangerouslySetInnerHTML` present in `src/components/TerminalPreview.tsx`.
 - `tsconfig.app.json` still has `strict: false`, `noImplicitAny: false`, `noUnusedLocals: false`, `noUnusedParameters: false`.
 - `package-lock.json` still contains removed dependencies (`@tanstack/react-query`, `react-markdown`, `next-themes`, `@hookform/resolvers`).
