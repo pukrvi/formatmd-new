@@ -78,3 +78,9 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 - ~~Implement production hardening changes in `formatmd-new`~~
 - ~~Update run tracker and memory log~~
 - Automated validation (`lint`/`test`/`build`) blocked: Node/npm not installed in this environment.
+
+## Current Run Status (2026-03-10 — Git Setup)
+- ~~Diagnose Git push issue~~
+- ~~Configure local Git identity and defaults in `formatmd-new`~~
+- ~~Confirm commit history and clean working tree~~
+- Pending: add remote `origin` and push once target remote URL is provided.

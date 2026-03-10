@@ -313,6 +313,34 @@ Update this file after every completed process/task run.
   - Run `npm run build` to confirm no type errors from TerminalPreview refactor
   - Constants file created but not yet wired into Index.tsx/SEOHead.tsx — can be done incrementally
 
+### 2026-03-10 (update 5 — Git Setup)
+- Task: Fix git push issue and set up repository Git defaults for FormatMD.
+- Run tracker:
+  - ~~Diagnose push failure~~
+  - ~~Configure local git identity and workflow defaults~~
+  - ~~Verify current branch and commit state~~
+  - Pending: configure remote and push after remote URL is provided.
+- Changes made:
+  - Root cause found: no remote configured in `/Users/gtmbuddy/Documents/formatmd/formatmd-new/.git/config`.
+  - Configured local repo git settings:
+    - `user.name = Puneet Vishnawat`
+    - `user.email = gtmbuddy@Puneets-MacBook-Pro.local`
+    - `push.autoSetupRemote = true`
+    - `pull.rebase = false`
+    - `fetch.prune = true`
+  - Verified latest saved commit exists:
+    - `3b3cf72 chore: save all current project changes`
+- Files touched:
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `git push` confirms issue: no configured push destination.
+  - `git remote -v` confirms zero remotes.
+- Browser check summary:
+  - Not applicable (git setup task).
+- Risks / follow-ups:
+  - Need target remote repository URL (GitHub/GitLab/Bitbucket) to finish setup and push.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:
