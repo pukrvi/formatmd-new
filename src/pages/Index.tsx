@@ -3,6 +3,7 @@ import TerminalPreview, { TerminalPreviewRef } from '@/components/TerminalPrevie
 import AnimatedLogo from '@/components/AnimatedLogo';
 import AnimatedPlaceholder from '@/components/AnimatedPlaceholder';
 import ScrollArrows from '@/components/ScrollArrows';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FeedbackModal from '@/components/FeedbackModal';
 import SEOHead from '@/components/SEOHead';
@@ -20,6 +21,7 @@ const Index = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [hintThemeIndex, setHintThemeIndex] = useState(0);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const previewRef = useRef<TerminalPreviewRef>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -41,6 +43,16 @@ const Index = () => {
     localStorage.setItem('formatmd-theme', themeId);
   }, [themeId]);
 
+  // Track scroll to toggle header transparency
+  useEffect(() => {
+    if (hasContent) return;
+    const handleScroll = () => {
+      setScrolledPastHero(window.scrollY > window.innerHeight * 0.6);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasContent]);
+
   const handleCopy = async () => {
     if (!previewRef.current) return;
 
@@ -58,7 +70,7 @@ const Index = () => {
       await navigator.clipboard.write([clipboardItem]);
 
       setIsCopied(true);
-      toast.success('Copied! Paste anywhere ✨', {
+      toast.success('Copied! Paste anywhere', {
         duration: 2000,
         style: {
           background: selectedTheme.colors.panel,
@@ -129,10 +141,18 @@ const Index = () => {
       <div className="relative z-10 flex flex-col flex-1">
         {!hasContent ? (
           <>
-            {/* Hero: always fills first fold responsively */}
-            <section className="min-h-[100svh] flex flex-col items-center justify-center px-4 sm:px-6 py-12 relative">
+            {/* Header — transparent on hero, solid after scroll */}
+            <Header
+              themeId={landingTheme.id}
+              transparent={!scrolledPastHero}
+              onThemeChange={setThemeId}
+              onFeedbackClick={() => setFeedbackOpen(true)}
+            />
+
+            {/* Hero: fills first fold */}
+            <section className="min-h-[calc(100svh-53px)] flex flex-col items-center justify-center px-4 sm:px-6 py-12 relative">
               {/* Logo */}
-              <div className="flex items-center gap-4 mb-8 animate-fade-in">
+              <div className="flex items-center gap-4 mb-6 animate-fade-in">
                 <AnimatedLogo color={landingTheme.colors.heading} size={32} />
                 <h1
                   className="text-3xl sm:text-4xl font-bold tracking-tight transition-colors duration-1000"
@@ -141,24 +161,36 @@ const Index = () => {
                 </h1>
               </div>
 
-              {/* Step badges */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6 animate-fade-in">
-                {['paste your markdown', 'watch it transform', 'copy styled output'].map((step, i) =>
-                <div
-                  key={step}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-500 ${
-                  hintThemeIndex === i ?
-                  'scale-105 opacity-100' :
-                  'scale-100 opacity-65'}`
-                  }
-                  style={{
-                    backgroundColor: landingTheme.colors.panel,
-                    color: landingTheme.colors.heading,
-                    border: `1px solid ${landingTheme.colors.heading}${hintThemeIndex === i ? '60' : '25'}`
-                  }}>
-                    {step}
+              {/* Headline */}
+              <p
+                className="text-lg sm:text-xl font-medium text-center mb-4 max-w-lg animate-fade-in transition-colors duration-1000"
+                style={{ color: landingTheme.colors.text, fontFamily: "'Poppins', sans-serif" }}>
+                Style your markdown. Copy it anywhere.
+              </p>
+
+              {/* Steps */}
+              <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fade-in">
+                {[
+                  { num: '1', label: 'Paste markdown' },
+                  { num: '2', label: 'Pick a theme' },
+                  { num: '3', label: 'Copy or export' },
+                ].map((step) => (
+                  <div
+                    key={step.num}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono"
+                    style={{
+                      backgroundColor: landingTheme.colors.panel + '60',
+                      color: landingTheme.colors.text + '80',
+                      border: `1px solid ${landingTheme.colors.heading}25`,
+                    }}>
+                    <span
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                      style={{ backgroundColor: landingTheme.colors.heading + '25', color: landingTheme.colors.heading }}>
+                      {step.num}
+                    </span>
+                    {step.label}
                   </div>
-                )}
+                ))}
               </div>
 
               {/* Input Box */}

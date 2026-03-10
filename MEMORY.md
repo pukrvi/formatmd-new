@@ -47,9 +47,9 @@ Update this file after every completed process/task run.
 
 ### Architecture Baseline
 - `src/pages`: `Index.tsx`, `Docs.tsx`, `NotFound.tsx`
-- `src/components`: TerminalPreview, MarkdownToolbar, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows
+- `src/components`: TerminalPreview, MarkdownToolbar, Header, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows
 - `src/components/ui`: shared shadcn/ui primitives
-- `src/lib`: themes, htmlToMarkdown, markdownToHtml, downloadHandler, constants, utils
+- `src/lib`: themes, htmlToMarkdown, markdownToHtml, downloadHandler, wikiContent, constants, utils
 - `src/hooks`: `useMarkdownPaste`
 - `src/integrations/supabase`: client + generated types
 
@@ -664,6 +664,94 @@ Update this file after every completed process/task run.
 - Risks / follow-ups:
   - `skill.MD` currently downloads as filename `skill.md`; rename is easy if a different naming pattern is required.
   - Existing chunk-size warning (>500 kB) remains unrelated to this change.
+
+### 2026-03-10 (update 16 — Consistency Fixes, Themed 404, Production Readiness Plan)
+- Task: Fix BUG-012, resolve doc/code inconsistencies, create production readiness plan.
+- Changes made:
+  - Themed NotFound page using FormatMD theme model (BUG-012 resolved — last open bug).
+  - Fixed SEO descriptions to list all 5 export formats across Index.tsx, index.html, JSON-LD.
+  - Footer now includes Docs link alongside Home and Feedback.
+  - CLAUDE.md brand rules updated with text colors for both themes.
+  - Created `skills/PRODUCTION_READINESS_PLAN.md` — phased plan covering security, stability, performance, testing, accessibility, and launch.
+- Files touched:
+  - `src/pages/NotFound.tsx`, `src/pages/Index.tsx`, `index.html`
+  - `src/components/Footer.tsx`, `CLAUDE.md`
+  - `skills/ALL_BUGS.md`, `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+  - `skills/PRODUCTION_READINESS_PLAN.md` (NEW)
+  - `docs/wiki/2026-03-10-consistency-fixes-qa-prod-plan.md` (NEW)
+- Validation run: lint passed, test passed (3/3), build passed.
+- Bug status: **12/12 resolved, 0 open.**
+
+### 2026-03-10 (update 17 — Wiki Creation)
+- Task: Create comprehensive product wiki for FormatMD.
+- Changes made:
+  - Created 11 wiki pages under `docs/wiki/`:
+    - `Home.md` — product overview, quick links, tech stack, status, AI agent onboarding
+    - `Getting-Started.md` — install, setup, first run walkthrough, deployment
+    - `Features.md` — editor, smart paste, toolbar, copy, export, themes, stats, feedback, SEO
+    - `Themes.md` — color specs, behavior, typography, customization
+    - `Export-Formats.md` — clipboard, .md, skill.MD, .txt, .html, PDF
+    - `Architecture.md` — data flow, directory structure, state management, pipelines, Supabase schema
+    - `Component-Reference.md` — all components with props/behavior
+    - `Contributing.md` — workflow, quality gates, PR template, coding standards
+    - `FAQ.md` — common questions for humans and AI agents
+    - `Changelog.md` — consolidated from existing PR notes
+    - `_Sidebar.md` — navigation structure
+- Files touched: 11 new files under `docs/wiki/`
+- Validation run: lint passed, test passed (3/3), build passed.
+
+### 2026-03-10 (update 18 — Docs Page Rewrite + Footer Rename + GitHub Wiki Publish)
+- Task: Rename footer link to "Documentation", rewrite `/docs` page to render wiki content, publish wiki to GitHub Wiki tab.
+- Changes made:
+  - Renamed footer link from "Docs" to "Documentation" in `Footer.tsx`.
+  - Completely rewrote `Docs.tsx`:
+    - Sidebar navigation with 8 wiki pages (Overview, Getting Started, Editor, Formatting Toolbar, Themes, Copy & Export, Architecture, FAQ).
+    - Themed markdown rendering using existing `markdownToStyledHtml` engine.
+    - Prev/Next page navigation at bottom of each page.
+    - Theme toggle in header (with localStorage persistence).
+    - Mobile responsive with hamburger sidebar menu.
+  - Created `src/lib/wikiContent.ts` with 8 documentation pages as structured data.
+  - Homepage features section (`DocumentationSection`) left unchanged.
+  - Published all 11 wiki pages to GitHub Wiki tab (`formatmd-new.wiki.git`) with:
+    - Fixed links for GitHub wiki format (no `.md` extensions).
+    - Converted relative repo links to absolute GitHub URLs.
+- Files touched:
+  - `src/components/Footer.tsx`
+  - `src/pages/Docs.tsx` (rewrite)
+  - `src/lib/wikiContent.ts` (NEW)
+  - GitHub wiki repo: 11 pages published
+- Validation run: lint passed (0 errors, 2 non-blocking warnings), test passed (3/3), build passed.
+- Architecture note: `Docs.tsx` no longer uses `DocumentationSection` component — it renders wiki content directly via `markdownToStyledHtml`. The `DocumentationSection` is still used on the homepage landing second fold.
+
+### 2026-03-10 (update 19 — Shared Header, Play-Once Animations, Focused Hero)
+- Task: Add consistent header across homepage and docs, make animations play once, refocus hero on product value.
+- Changes made:
+  - Created shared `Header` component used on both Index and Docs pages:
+    - Transparent on homepage first fold, solid after scrolling past hero (60vh threshold).
+    - Always solid on docs page.
+    - Contains: logo, Documentation link, theme toggle, Feedback button.
+    - Active page link highlighting.
+  - Updated `AnimatedLogo`:
+    - Replaced icons: Palette, Zap, Smile → Hash, Terminal, FileCode (kept Code2).
+    - Icons now cycle once (Code2 → Hash → Terminal → FileCode) then stop. No infinite loop.
+    - Removed floating particle ping animations.
+  - Updated `AnimatedPlaceholder`:
+    - Plays through both examples once (dark → light) then disappears. No infinite loop.
+    - After animation completes, settles on first theme (infiniti dark).
+  - Rewrote homepage hero:
+    - Single clear headline: "Style your markdown. Copy it anywhere."
+    - Numbered steps: 1. Paste markdown → 2. Pick a theme → 3. Copy or export
+    - Removed old animated step badges.
+  - Docs page updated to use shared Header (removed inline header with ArrowLeft).
+  - **Editor behavior completely unchanged** — no modifications to TerminalPreview or editor flow.
+- Files touched:
+  - `src/components/Header.tsx` (NEW)
+  - `src/components/AnimatedLogo.tsx` (rewrite)
+  - `src/components/AnimatedPlaceholder.tsx` (play-once)
+  - `src/pages/Index.tsx` (header + hero rewrite)
+  - `src/pages/Docs.tsx` (use shared Header)
+  - `MEMORY.md`
+- Validation run: lint passed (0 errors, 2 non-blocking warnings), test passed (3/3), build passed.
 
 ## Entry Template (use for every future update)
 - Date:

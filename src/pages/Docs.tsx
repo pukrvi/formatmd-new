@@ -1,13 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { getTheme, ThemeId } from '@/lib/themes';
 import { wikiPages } from '@/lib/wikiContent';
 import { markdownToStyledHtml } from '@/lib/markdownToHtml';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FeedbackModal from '@/components/FeedbackModal';
-import AnimatedLogo from '@/components/AnimatedLogo';
 import SEOHead from '@/components/SEOHead';
-import { ArrowLeft, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Docs = () => {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -58,52 +57,24 @@ const Docs = () => {
         path="/docs"
       />
 
-      {/* Header */}
-      <header
-        className="sticky top-0 z-30 px-4 sm:px-6 py-3 border-b backdrop-blur-md"
-        style={{ borderColor: c.heading + '18', backgroundColor: c.background + 'e8' }}
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <button
-              className="lg:hidden p-1.5 rounded-md transition-colors"
-              style={{ color: c.heading }}
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-              <ArrowLeft className="w-4 h-4" style={{ color: c.heading }} />
-              <AnimatedLogo color={c.heading} size={20} />
-              <span className="font-mono text-sm font-bold" style={{ color: c.heading }}>FormatMD</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span
-              className="hidden sm:block text-xs font-mono px-2.5 py-1 rounded-full"
-              style={{ backgroundColor: c.panel, color: c.text + '60', border: `1px solid ${c.heading}20` }}
-            >
-              Documentation
-            </span>
-            <button
-              onClick={() => setThemeId(themeId === 'infiniti' ? 'vaporwave' : 'infiniti')}
-              className="p-1.5 rounded-md text-sm transition-all hover:scale-110"
-              style={{ color: c.heading }}
-              title="Toggle theme"
-            >
-              {theme.icon}
-            </button>
-            <button
-              onClick={() => setFeedbackOpen(true)}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all hover:scale-105"
-              style={{ backgroundColor: c.heading + '15', color: c.heading }}
-            >
-              Feedback
-            </button>
-          </div>
+      {/* Shared Header */}
+      <div className="flex items-center">
+        <div className="flex-1">
+          <Header
+            themeId={themeId}
+            onThemeChange={setThemeId}
+            onFeedbackClick={() => setFeedbackOpen(true)}
+          />
         </div>
-      </header>
+        {/* Mobile sidebar toggle — overlaid beside header */}
+        <button
+          className="lg:hidden absolute left-4 z-40 p-1.5 rounded-md transition-colors"
+          style={{ color: c.heading }}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
 
       <div className="flex-1 flex max-w-6xl mx-auto w-full">
         {/* Mobile sidebar overlay */}
