@@ -18,6 +18,7 @@
 ## Resolved Bugs
 
 - `BUG-001` Footer transition freeze after paste/edit flow.
+- `BUG-001B` Editor first-open layout stuck after paste due hidden hero flex occupancy (fixed by explicit landing/editor conditional render path).
 - `BUG-002` `/docs` and `/docs#features` navigation collision.
 - `BUG-003` Toolbar interaction/focus consistency.
 - `BUG-004` Animated placeholder stuck-state issue.
@@ -35,5 +36,5 @@
 
 - No `document.execCommand` calls found in current `src/`.
 - Terminal download dropdown uses `z-50` (legacy note claiming `z-[9999]` there was outdated).
+- Homepage footer now targets homepage folds (`/#documentation`, `/#features`) and no longer forces docs-route-only navigation.
 - Bug status here supersedes conflicting historical notes from removed legacy files.
-

@@ -507,6 +507,162 @@ Update this file after every completed process/task run.
   - Open and complete PR on GitHub web UI using generated URL.
   - Run full `lint`/`test`/`build` and browser checks in a Node/npm-enabled environment before merge.
 
+### 2026-03-10 (update 11 — Footer, Hero, and Homepage Fold Fixes)
+- Task: Resolve footer-induced editor layout issues and redesign homepage flow per UI feedback.
+- Changes made:
+  - Fixed editor-open/stuck layout by replacing dual hidden/visible stacked layout with explicit conditional rendering (`landing` vs `editor`) in `Index.tsx`.
+  - Removed fixed/footer-overlay pattern that was contributing to visual and layout conflicts.
+  - Added `DocumentationSection` component and moved documentation content to homepage second fold (directly after hero).
+  - Updated docs route (`Docs.tsx`) to reuse the shared documentation section for consistency.
+  - Updated footer links to homepage anchors (`/#documentation`, `/#features`) and improved light-theme styling/readability.
+  - Made hero fill first fold responsively with `min-h-[100svh]` and responsive spacing/sizing.
+  - Added hash-scroll handling in homepage route to support anchor navigation reliably.
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `src/components/Footer.tsx`
+  - `src/pages/Docs.tsx`
+  - `src/components/DocumentationSection.tsx` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> failed:
+    - `tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports` (`require("tailwindcss-animate")`)
+    - plus 2 pre-existing fast-refresh warnings in UI utility files
+  - `npm run test` -> failed: no test files found
+  - `npm run build` -> passed (production build successful)
+  - Dev server started successfully at `http://localhost:8080/`
+- Browser check summary:
+  - Runtime app launch verified locally after installing Node/npm and dependencies.
+  - User-reported stuck editor layout was addressed in layout structure.
+- Risks / follow-ups:
+  - Lint/test gates still not green due existing project-level issues unrelated to this UI patch.
+  - If desired, next pass should fix Tailwind config `require()` lint rule and add at least one baseline test file to make `npm run test` pass.
+
+### 2026-03-10 (update 12 — Features Fold Rename + Footer Link/Feedback Cleanup)
+- Task: Update homepage second fold and footer as requested, and remove redundant navigation logic tied to removed footer links.
+- Changes made:
+  - Renamed second-fold section heading in homepage/docs shared section:
+    - `Documentation` -> `Features`.
+  - Replaced highlighted subheading line with more feature-relevant messaging.
+  - Footer updates:
+    - Removed `Documentation` and `Features` links.
+    - Added external `InfinitiGRID` link to `https://infinitigrid.com/`.
+    - Added `Feedback` button in footer.
+  - Redundancy cleanup:
+    - Added optional `onFeedbackClick` prop in `Footer` and wired it in both `Index` and `Docs`.
+    - Removed now-unused hash navigation logic from `Footer`.
+    - Removed now-unused route hash effect/import in `Index`.
+- Files touched:
+  - `src/components/DocumentationSection.tsx`
+  - `src/components/Footer.tsx`
+  - `src/pages/Index.tsx`
+  - `src/pages/Docs.tsx`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> failed:
+    - `tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports` (`require("tailwindcss-animate")`)
+    - plus 2 pre-existing fast-refresh warnings in UI utility files
+  - `npm run test` -> failed: no test files found
+  - `npm run build` -> passed (production build successful)
+- Browser check summary:
+  - UI browser sanity check not executed in this run; build output confirms compile success.
+- Risks / follow-ups:
+  - Footer feedback button now appears on both homepage and docs page; docs header still also has feedback entrypoint by design.
+  - To make QA fully green: fix Tailwind config lint rule and add baseline tests.
+
+### 2026-03-10 (update 13 — Landing Theme Animation Restore + Production Cleanup Pass)
+- Task: Investigate missing dark/light landing animation, confirm whether removed vs disabled, and remove redundant code while improving production readiness.
+- Findings:
+  - The homepage landing animation was not removed from backend services; it was disabled in frontend logic in `Index.tsx` by pinning `landingTheme` to the selected theme and no longer consuming animated hints.
+  - No backend dependency controls this animation path.
+- Changes made:
+  - Restored landing dark/light theme animation by wiring landing visuals back to `AnimatedPlaceholder` hint indices.
+  - Refactored homepage state to remove redundant `hasContent` state/effect pair; now derived directly from `markdown`.
+  - Kept user-selected theme persistence intact (`localStorage`) while allowing animated landing theme class updates before content entry.
+  - Fixed Tailwind lint blocker by replacing `require("tailwindcss-animate")` with ESM import in `tailwind.config.ts`.
+  - Added baseline test file for theme logic so `npm run test` no longer fails with "No test files found".
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `tailwind.config.ts`
+  - `src/lib/themes.test.ts` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed with 2 warnings (`react-refresh/only-export-components` in UI primitive files)
+  - `npm run test` -> passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` -> passed
+  - `npm run dev -- --host 0.0.0.0 --port 8080` -> runtime started at `http://localhost:8081/` because `8080` was in use
+- Browser check summary:
+  - Runtime boot verified via local dev server startup.
+  - Manual visual confirmation of animation behavior is still required in browser.
+- Risks / follow-ups:
+  - Remaining lint warnings are non-blocking but can be resolved by moving shared constants out of component files in `src/components/ui/`.
+  - Build still reports large chunk warning (>500 kB); consider code-splitting optimization pass.
+
+### 2026-03-10 (update 14 — Feedback Modal Single-Form Redesign + Schema Alignment)
+- Task: Redesign feedback modal into one request form and capture email with privacy guidance, then align schema/types for production safety.
+- Changes made:
+  - Replaced dual-tab (`Bug Report` / `Feature Request`) modal flow with a single request form.
+  - Added required `Email` field and privacy tooltip icon clarifying:
+    - no spam / no data selling
+    - email used only for request updates and spam prevention.
+  - Renamed `Title` UX field to `Request Heading`.
+  - Kept `Description` and multi-file attachments flow.
+  - Added stricter client-side validation:
+    - email format required
+    - request heading required
+    - description required.
+  - Updated feedback insert payload to unified `type: 'request'` and included `email`.
+  - Added migration to support unified request type and email capture:
+    - new `email` column
+    - expanded type check to include `request`
+    - set default type to `request`.
+  - Updated generated-style Supabase TypeScript types to include new `email` field.
+- Files touched:
+  - `src/components/FeedbackModal.tsx`
+  - `supabase/migrations/20260310124500_feedback_request_form.sql` (NEW)
+  - `src/integrations/supabase/types.ts`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed with 2 warnings (`react-refresh/only-export-components` in UI primitive files)
+  - `npm run test` -> passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Build-level verification completed; manual UI click-through for tooltip + form submission should be done after deployment target is connected to migrated DB.
+- Risks / follow-ups:
+  - Supabase migration must be applied before using the new email field in production.
+  - If migration is skipped, feedback submission will fail due missing `email` column or unsupported `request` type.
+
+### 2026-03-10 (update 15 — Markdown Export Behavior Split: Clean vs skill.MD)
+- Task: Remove default delimiter wrapping from normal markdown export and add explicit `skill.MD` format for wrapped output.
+- Changes made:
+  - Updated download export logic:
+    - `.md` now downloads clean markdown exactly as shown in editor/preview.
+    - Added `skill.MD` format that downloads markdown wrapped with:
+      - `---`
+      - content
+      - `---`
+  - Updated download dropdown UI to include `skill.MD` option.
+  - Updated features/documentation copy to describe clean `.md` vs `skill.MD` behavior.
+  - Copy pipeline remains clean markdown by default (no automatic wrapper insertion).
+- Files touched:
+  - `src/lib/downloadHandler.ts`
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/DocumentationSection.tsx`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed with 2 warnings (`react-refresh/only-export-components` in UI primitive files)
+  - `npm run test` -> passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Build-level verification completed; manual download/copy click-through should verify expected file payloads in browser.
+- Risks / follow-ups:
+  - `skill.MD` currently downloads as filename `skill.md`; rename is easy if a different naming pattern is required.
+  - Existing chunk-size warning (>500 kB) remains unrelated to this change.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

@@ -109,3 +109,57 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 - ~~Read `start.md` and `CLAUDE.md`~~
 - ~~Prepare branch + PR-ready commit for all current changes~~
 - `gh` CLI unavailable in environment; PR creation must be completed via GitHub web URL after push.
+
+## Current Run Status (2026-03-10 — Footer + Fold Fixes)
+- ~~Fix editor opening/stuck layout after paste~~
+- ~~Make footer light-theme compatible~~
+- ~~Move documentation into second fold on homepage~~
+- ~~Make hero fill first fold responsively across devices~~
+- Validation:
+  - `npm run build` passed
+  - `npm run lint` failed due existing config rule (`no-require-imports` in `tailwind.config.ts`)
+  - `npm run test` failed because no test files exist
+
+## Current Run Status (2026-03-10 — Features Fold + Footer Cleanup)
+- ~~Rename second-fold heading from Documentation to Features~~
+- ~~Update highlighted copy to be feature-relevant~~
+- ~~Remove footer Documentation/Features links~~
+- ~~Add footer Feedback button and InfinitiGRID external link~~
+- ~~Refactor footer/page wiring to remove redundant hash-navigation logic~~
+- Validation:
+  - `npm run lint` failed (`tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports`)
+  - `npm run test` failed (no test files found)
+  - `npm run build` passed
+
+## Current Run Status (2026-03-10 — Theme Animation Restore + Prod Sweep)
+- ~~Verify whether landing dark/light animation was removed or disabled~~
+- ~~Restore landing theme animation without regressing editor theme persistence~~
+- ~~Remove redundant landing-state logic in homepage page component~~
+- ~~Fix lint blocker in Tailwind config~~
+- ~~Add baseline test coverage so `npm run test` executes successfully~~
+- Validation:
+  - `npm run lint` passed with 2 non-blocking warnings in UI primitive files
+  - `npm run test` passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` passed
+  - `npm run dev -- --host 0.0.0.0 --port 8080` started successfully at `http://localhost:8081/` (8080 occupied)
+
+## Current Run Status (2026-03-10 — Feedback Modal Simplification)
+- ~~Remove bug/feature tab toggle and keep a single request form~~
+- ~~Add required email field with privacy tooltip~~
+- ~~Rename title field to request heading~~
+- ~~Keep description + attachments flow~~
+- ~~Update Supabase schema/types for email + unified request type~~
+- Validation:
+  - `npm run lint` passed with 2 non-blocking warnings in UI primitive files
+  - `npm run test` passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` passed
+
+## Current Run Status (2026-03-10 — Clean Markdown Export + skill.MD Option)
+- ~~Remove automatic `---` wrapping from default `.md` downloads~~
+- ~~Add new `skill.MD` download option that wraps content with `---` delimiters~~
+- ~~Keep copy/default export behavior as clean markdown~~
+- ~~Update feature docs copy for new download behavior~~
+- Validation:
+  - `npm run lint` passed with 2 non-blocking warnings in UI primitive files
+  - `npm run test` passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` passed

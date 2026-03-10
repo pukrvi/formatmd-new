@@ -7,11 +7,13 @@
 
 ## QA Run Status (This Session)
 
-Attempted full QA commands across the whole codebase:
+Executed full QA commands across the whole codebase:
 
-- `npm run lint` -> `zsh:1: command not found: npm`
-- `npm run test` -> `zsh:1: command not found: npm`
-- `npm run build` -> `zsh:1: command not found: npm`
+- `npm run lint` -> failed
+  - `tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports` (`require("tailwindcss-animate")`)
+  - 2 warnings in UI primitive files (`react-refresh/only-export-components`)
+- `npm run test` -> failed (`No test files found`)
+- `npm run build` -> passed (production bundle generated)
 
 Static QA findings run successfully:
 
@@ -23,9 +25,6 @@ Static QA findings run successfully:
 ---
 
 ## Deploy Blockers (P0)
-
-- [ ] `PR-001` Install/Toolchain readiness
-  - Unblock Node/npm in environment and rerun full QA gate.
 
 - [ ] `PR-002` XSS sanitization on HTML render path
   - Add trusted sanitizer before rendering/copy/export HTML.
@@ -78,4 +77,3 @@ Resolved debt items:
 - Keep dependency additions blocked by default unless required for security or correctness.
 - Every dependency must have direct import usage or a documented justification.
 - Sync lockfile after every dependency change.
-
