@@ -7,10 +7,9 @@ import Footer from '@/components/Footer';
 import FeedbackModal from '@/components/FeedbackModal';
 import SEOHead from '@/components/SEOHead';
 import DocumentationSection from '@/components/DocumentationSection';
-import { getTheme, ThemeId, Theme } from '@/lib/themes';
+import { getTheme, themes, ThemeId } from '@/lib/themes';
 import { toast } from 'sonner';
 import { useMarkdownPaste } from '@/hooks/useMarkdownPaste';
-import { useLocation } from 'react-router-dom';
 
 const Index = () => {
   const [markdown, setMarkdown] = useState('');
@@ -19,34 +18,28 @@ const Index = () => {
     return saved === 'infiniti' || saved === 'vaporwave' ? saved : 'infiniti';
   });
   const [isCopied, setIsCopied] = useState(false);
-  const [hasContent, setHasContent] = useState(false);
   const [hintThemeIndex, setHintThemeIndex] = useState(0);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const previewRef = useRef<TerminalPreviewRef>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const location = useLocation();
 
-  const theme: Theme = getTheme(themeId);
+  const hasContent = markdown.trim().length > 0;
+  const selectedTheme = getTheme(themeId);
+  const hintedTheme = themes[hintThemeIndex] ?? themes[0];
+  const landingTheme = hasContent ? selectedTheme : hintedTheme;
 
-  // Detect when user starts typing/pasting
-  useEffect(() => {
-    if (markdown.trim().length > 0 && !hasContent) {
-      setHasContent(true);
-    }
-    if (markdown.trim().length === 0 && hasContent) {
-      setHasContent(false);
-    }
-  }, [markdown, hasContent]);
-
-  // Apply theme class to document and persist
+  // Apply active theme class to document; landing mode follows animated placeholder hints.
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('theme-clean', 'theme-vaporwave');
-    if (theme.className) {
-      root.classList.add(theme.className);
+    if (landingTheme.className) {
+      root.classList.add(landingTheme.className);
     }
+  }, [landingTheme.className]);
+
+  useEffect(() => {
     localStorage.setItem('formatmd-theme', themeId);
-  }, [theme, themeId]);
+  }, [themeId]);
 
   const handleCopy = async () => {
     if (!previewRef.current) return;
@@ -68,9 +61,9 @@ const Index = () => {
       toast.success('Copied! Paste anywhere ✨', {
         duration: 2000,
         style: {
-          background: theme.colors.panel,
-          border: `1px solid ${theme.colors.heading}`,
-          color: theme.colors.text
+          background: selectedTheme.colors.panel,
+          border: `1px solid ${selectedTheme.colors.heading}`,
+          color: selectedTheme.colors.text
         }
       });
 
@@ -89,7 +82,6 @@ const Index = () => {
 
   const handleReset = () => {
     setMarkdown('');
-    setHasContent(false);
     setTimeout(() => inputRef.current?.focus(), 300);
   };
 
@@ -105,22 +97,6 @@ const Index = () => {
   );
 
   const handlePaste = useMarkdownPaste(handlePasteInsert);
-
-  // Keep landing visuals tied to active theme for color consistency.
-  const landingTheme = theme;
-
-  useEffect(() => {
-    if (hasContent) return;
-
-    const hash = location.hash.replace('#', '');
-    if (!hash) return;
-
-    const timer = window.setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
-    }, 60);
-
-    return () => window.clearTimeout(timer);
-  }, [location.hash, hasContent]);
 
   return (
     <div
@@ -220,14 +196,14 @@ const Index = () => {
             </section>
 
             <DocumentationSection theme={landingTheme} />
-            <Footer themeId={landingTheme.id} />
+            <Footer themeId={landingTheme.id} onFeedbackClick={() => setFeedbackOpen(true)} />
           </>
         ) : (
           <div className="h-[100svh] min-h-0">
             <TerminalPreview
               ref={previewRef}
               markdown={markdown}
-              theme={theme}
+              theme={selectedTheme}
               onCopy={handleCopy}
               isCopied={isCopied}
               onThemeChange={setThemeId}

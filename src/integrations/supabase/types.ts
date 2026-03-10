@@ -19,6 +19,7 @@ export type Database = {
           attachments: string[] | null
           created_at: string
           description: string | null
+          email: string | null
           id: string
           title: string
           type: string
@@ -27,6 +28,7 @@ export type Database = {
           attachments?: string[] | null
           created_at?: string
           description?: string | null
+          email?: string | null
           id?: string
           title: string
           type: string
@@ -35,6 +37,7 @@ export type Database = {
           attachments?: string[] | null
           created_at?: string
           description?: string | null
+          email?: string | null
           id?: string
           title?: string
           type?: string

@@ -186,10 +186,10 @@ const DocumentationSection = ({ theme }: DocumentationSectionProps) => {
       <div id="features" className="max-w-5xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold font-mono mb-3" style={{ color: c.heading }}>
-            Documentation
+            Features
           </h2>
           <p className="text-sm font-mono leading-relaxed" style={{ color: c.text + '70' }}>
-            Everything you need, right below the hero: editing flow, formatting tools, themes, export options, and live metrics.
+            Explore the core capabilities: faster writing, precise formatting, instant preview, and export-ready output.
           </p>
         </div>
 

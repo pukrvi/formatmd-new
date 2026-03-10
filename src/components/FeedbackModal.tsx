@@ -1,18 +1,17 @@
 import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTheme, ThemeId } from '@/lib/themes';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Bug, Lightbulb, Upload, X, Loader2 } from 'lucide-react';
+import { Upload, X, Loader2, CircleHelp } from 'lucide-react';
 
 interface FeedbackModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   themeId?: ThemeId;
 }
-
-type FeedbackType = 'bug' | 'feature';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -65,8 +64,8 @@ const compressFile = async (file: File): Promise<File> => {
 
 const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackModalProps) => {
   const theme = getTheme(themeId);
-  const [type, setType] = useState<FeedbackType>('bug');
-  const [title, setTitle] = useState('');
+  const [email, setEmail] = useState('');
+  const [requestHeading, setRequestHeading] = useState('');
   const [description, setDescription] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -104,10 +103,23 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
   };
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
-      toast.error('Please add a title');
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      toast.error('Please enter a valid email address');
       return;
     }
+
+    if (!requestHeading.trim()) {
+      toast.error('Please add a request heading');
+      return;
+    }
+
+    if (!description.trim()) {
+      toast.error('Please add a description');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -126,16 +138,18 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
 
       // Insert feedback
       const { error } = await supabase.from('feedback').insert({
-        type,
-        title: title.trim().slice(0, 200),
+        type: 'request',
+        email: normalizedEmail.slice(0, 254),
+        title: requestHeading.trim().slice(0, 200),
         description: description.trim().slice(0, 2000),
         attachments: uploadedPaths,
       });
 
       if (error) throw error;
 
-      toast.success('Feedback submitted! Thank you 🙏');
-      setTitle('');
+      toast.success('Request submitted! Thank you 🙏');
+      setEmail('');
+      setRequestHeading('');
       setDescription('');
       setFiles([]);
       onOpenChange(false);
@@ -158,60 +172,93 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
         }}
       >
         <DialogHeader>
-          <DialogTitle style={{ color: theme.colors.heading }}>Report Bug / Request Feature</DialogTitle>
+          <DialogTitle style={{ color: theme.colors.heading }}>Send a Request</DialogTitle>
           <DialogDescription style={{ color: theme.colors.text + '60' }}>
-            Help us improve FormatMD
+            Share your request and we will review it quickly.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Type toggle */}
-        <div className="flex gap-2">
-          {([
-            { value: 'bug' as FeedbackType, icon: Bug, label: 'Bug Report' },
-            { value: 'feature' as FeedbackType, icon: Lightbulb, label: 'Feature Request' },
-          ]).map(({ value, icon: Icon, label }) => (
-            <button
-              key={value}
-              onClick={() => setType(value)}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-              style={{
-                backgroundColor: type === value ? `${theme.colors.heading}20` : 'transparent',
-                color: type === value ? theme.colors.heading : theme.colors.text + '60',
-                border: `1px solid ${type === value ? theme.colors.heading + '40' : theme.colors.heading + '15'}`,
-              }}
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-            </button>
-          ))}
+        {/* Email */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-1.5">
+            <label className="text-xs font-mono" style={{ color: theme.colors.text + '78' }}>
+              Email
+            </label>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex"
+                    aria-label="Email privacy information"
+                  >
+                    <CircleHelp className="w-3.5 h-3.5" style={{ color: theme.colors.text + '65' }} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="top"
+                  className="max-w-[260px] text-xs font-mono"
+                  style={{
+                    backgroundColor: theme.colors.panel,
+                    border: `1px solid ${theme.colors.heading}25`,
+                    color: theme.colors.text,
+                  }}
+                >
+                  We do not spam or sell your data. We only use email updates for your request and spam prevention.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            maxLength={254}
+            className="w-full px-3 py-2 rounded-lg text-sm font-mono bg-transparent focus:outline-none"
+            style={{
+              border: `1px solid ${theme.colors.heading}20`,
+              color: theme.colors.text,
+            }}
+          />
         </div>
 
-        {/* Title */}
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          maxLength={200}
-          className="w-full px-3 py-2 rounded-lg text-sm font-mono bg-transparent focus:outline-none"
-          style={{
-            border: `1px solid ${theme.colors.heading}20`,
-            color: theme.colors.text,
-          }}
-        />
+        {/* Request heading */}
+        <div className="space-y-2">
+          <label className="text-xs font-mono" style={{ color: theme.colors.text + '78' }}>
+            Request Heading
+          </label>
+          <input
+            value={requestHeading}
+            onChange={(e) => setRequestHeading(e.target.value)}
+            placeholder="Short summary of your request"
+            maxLength={200}
+            className="w-full px-3 py-2 rounded-lg text-sm font-mono bg-transparent focus:outline-none"
+            style={{
+              border: `1px solid ${theme.colors.heading}20`,
+              color: theme.colors.text,
+            }}
+          />
+        </div>
 
         {/* Description */}
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe in detail..."
-          maxLength={2000}
-          rows={4}
-          className="w-full px-3 py-2 rounded-lg text-sm font-mono bg-transparent resize-none focus:outline-none"
-          style={{
-            border: `1px solid ${theme.colors.heading}20`,
-            color: theme.colors.text,
-          }}
-        />
+        <div className="space-y-2">
+          <label className="text-xs font-mono" style={{ color: theme.colors.text + '78' }}>
+            Description
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe your request in detail..."
+            maxLength={2000}
+            rows={4}
+            className="w-full px-3 py-2 rounded-lg text-sm font-mono bg-transparent resize-none focus:outline-none"
+            style={{
+              border: `1px solid ${theme.colors.heading}20`,
+              color: theme.colors.text,
+            }}
+          />
+        </div>
 
         {/* File upload */}
         <div>
@@ -224,6 +271,7 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
             className="hidden"
           />
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-mono transition-all"
             style={{
@@ -244,7 +292,7 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
                   style={{ backgroundColor: theme.colors.panel, color: theme.colors.text + '80' }}
                 >
                   {f.name.slice(0, 20)}
-                  <button onClick={() => removeFile(i)}>
+                  <button type="button" onClick={() => removeFile(i)}>
                     <X className="w-3 h-3" />
                   </button>
                 </div>
