@@ -14,10 +14,16 @@ const Header = ({ themeId, transparent = false, onThemeChange, onFeedbackClick }
   const c = theme.colors;
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isDark = themeId === 'infiniti';
+
+  const btnStyle = {
+    color: c.heading,
+    backgroundColor: c.heading + '15',
+  };
 
   return (
     <header
-      className="sticky top-0 z-30 px-4 sm:px-6 py-3 border-b backdrop-blur-md transition-all duration-500"
+      className="sticky top-0 z-30 px-4 sm:px-6 py-3 border-b transition-all duration-500"
       style={{
         borderColor: transparent ? 'transparent' : c.heading + '18',
         backgroundColor: transparent ? 'transparent' : c.background + 'e8',
@@ -30,38 +36,39 @@ const Header = ({ themeId, transparent = false, onThemeChange, onFeedbackClick }
           <span className="font-mono text-sm font-bold" style={{ color: c.heading }}>FormatMD</span>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {!isHome && (
             <Link
               to="/"
-              className="text-xs font-mono transition-colors duration-200 hover:underline"
-              style={{ color: c.text + '60' }}
+              className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all hover:scale-105"
+              style={btnStyle}
             >
               Home
             </Link>
           )}
           <Link
             to="/docs"
-            className="text-xs font-mono transition-colors duration-200 hover:underline"
-            style={{ color: location.pathname === '/docs' ? c.heading : c.text + '60' }}
+            className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all hover:scale-105"
+            style={btnStyle}
           >
             Documentation
           </Link>
           {onThemeChange && (
             <button
-              onClick={() => onThemeChange(themeId === 'infiniti' ? 'vaporwave' : 'infiniti')}
-              className="p-1.5 rounded-md text-sm transition-all hover:scale-110"
-              style={{ color: c.heading }}
+              onClick={() => onThemeChange(isDark ? 'vaporwave' : 'infiniti')}
+              className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all hover:scale-105 flex items-center gap-1.5"
+              style={btnStyle}
               title="Toggle theme"
             >
-              {theme.icon}
+              <span className="text-sm leading-none">{isDark ? '☀️' : '🌙'}</span>
+              <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'}</span>
             </button>
           )}
           {onFeedbackClick && (
             <button
               onClick={onFeedbackClick}
               className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all hover:scale-105"
-              style={{ backgroundColor: c.heading + '15', color: c.heading }}
+              style={btnStyle}
             >
               Feedback
             </button>

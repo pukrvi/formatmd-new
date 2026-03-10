@@ -22,13 +22,20 @@ const Index = () => {
   const [hintThemeIndex, setHintThemeIndex] = useState(0);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const [userToggledTheme, setUserToggledTheme] = useState(false);
   const previewRef = useRef<TerminalPreviewRef>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const hasContent = markdown.trim().length > 0;
   const selectedTheme = getTheme(themeId);
   const hintedTheme = themes[hintThemeIndex] ?? themes[0];
-  const landingTheme = hasContent ? selectedTheme : hintedTheme;
+  // Once user explicitly toggles theme, stop following animation hints
+  const landingTheme = hasContent || userToggledTheme ? selectedTheme : hintedTheme;
+
+  const handleThemeToggle = useCallback((id: ThemeId) => {
+    setUserToggledTheme(true);
+    setThemeId(id);
+  }, []);
 
   // Apply active theme class to document; landing mode follows animated placeholder hints.
   useEffect(() => {
@@ -145,7 +152,7 @@ const Index = () => {
             <Header
               themeId={landingTheme.id}
               transparent={!scrolledPastHero}
-              onThemeChange={setThemeId}
+              onThemeChange={handleThemeToggle}
               onFeedbackClick={() => setFeedbackOpen(true)}
             />
 
