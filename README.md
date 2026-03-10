@@ -34,7 +34,7 @@ No sign-up. No install. Just paste and go.
 | Styling    | Tailwind CSS 3.4 + shadcn/ui                  |
 | Routing    | React Router v6                               |
 | Backend    | Supabase (PostgreSQL + Storage)               |
-| Data       | TanStack Query 5                              |
+| Data       | Local React state + Supabase client           |
 | SEO        | react-helmet-async                            |
 | Fonts      | Poppins (UI) + Fira Code (editor)             |
 
@@ -69,7 +69,7 @@ Copy `.env.example` to `.env` and fill in your Supabase credentials:
 
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
 > **Note:** The anon key is a client-side publishable key. Row-Level Security (RLS) policies are the security boundary, not key secrecy.
@@ -159,11 +159,10 @@ Detailed project documentation lives in the `skills/` directory:
 |--------------------------------------|--------------------------------|
 | `CLAUDE.md`                          | Agent operating instructions   |
 | `MEMORY.md`                          | Persistent change log          |
-| `skills/ROADMAP.md`                  | Feature roadmap + priorities   |
-| `skills/PROJECT_CHARTER.md`          | Architecture overview          |
-| `skills/TECH_DEBT.md`               | Technical debt register        |
-| `skills/CODE_OPTIMIZATION_AUDIT.md`  | Code optimization plan         |
-| `skills/AUDIT_*.md`                  | Bug, SEO, UX, perf, security audits |
+| `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` | Production readiness, performance, and tech debt |
+| `skills/ALL_BUGS.md`                 | Unified bug tracker (open + resolved) |
+| `skills/SEO.md`                      | SEO status + remaining actions |
+| `skills/UI_UX_FLOW.md`               | UI/UX/flow and accessibility tracker |
 
 ---
 

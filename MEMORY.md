@@ -341,6 +341,147 @@ Update this file after every completed process/task run.
 - Risks / follow-ups:
   - Need target remote repository URL (GitHub/GitLab/Bitbucket) to finish setup and push.
 
+### 2026-03-10 (update 6 — Production Dependency Cleanup)
+- Task: Select and execute a production-readiness task from pending improvements with focus on refactor + dependency reduction.
+- Changes made:
+  - Reviewed `start.md`, `CLAUDE.md`, and `skills/` audit/roadmap files to identify outstanding production hardening tasks.
+  - Removed unused React Query integration from app shell:
+    - Deleted `QueryClient`/`QueryClientProvider` imports.
+    - Removed `queryClient` instantiation.
+    - Simplified root component tree in `App.tsx` without behavior changes to routing/toasts/tooltips.
+  - Removed unused dependency declarations:
+    - `@tanstack/react-query` (runtime dependency, unused in source).
+    - `@tailwindcss/typography` (dev dependency, not configured in Tailwind plugins).
+- Files touched:
+  - `src/App.tsx`
+  - `package.json`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` → failed: `zsh:1: command not found: npm`
+  - `npm run test` → failed: `zsh:1: command not found: npm`
+  - `npm run build` → failed: `zsh:1: command not found: npm`
+- Browser check summary:
+  - Blocked (cannot run dev/build toolchain without Node/npm).
+- Risks / follow-ups:
+  - `package-lock.json` was not regenerated in this environment because npm is unavailable.
+  - Run `npm install` (or `npm uninstall @tanstack/react-query @tailwindcss/typography`) once Node/npm is available to sync lockfile and verify clean install.
+  - Re-run full quality gates and browser sanity checks after toolchain restore.
+
+### 2026-03-10 (update 7 — Skills Consolidation + Master Task List)
+- Task: Consolidate overlapping `skills/` documentation into a minimal canonical set and create a verified production-ready master task list.
+- Changes made:
+  - Read and reconciled `start.md`, `CLAUDE.md`, and all legacy `skills/*.md` files against current source/config state.
+  - Consolidated status tracking into 5 canonical skills files:
+    - `skills/ROADMAP.md` rewritten as master active production task list.
+    - `skills/AUDITS.md` added as consolidated open/resolved findings register.
+    - `skills/COMPLETED.md` added as completed-work ledger.
+    - `skills/PROJECT_CHARTER.md` rewritten with current architecture/dependency baseline.
+    - `skills/REFERENCES.md` rewritten as trusted reference + dependency governance file.
+  - Removed overlapping legacy files merged into canonical set:
+    - `AUDIT_BUGS.md`, `AUDIT_PERFORMANCE.md`, `AUDIT_SECURITY.md`, `AUDIT_SEO.md`, `AUDIT_UX.md`
+    - `CODE_OPTIMIZATION_AUDIT.md`, `TECH_DEBT.md`, `PR_NOTES_PHASE1_BUGFIXES.md`, `prompts.md`
+  - Updated `README.md` documentation section and stale metadata references to match the new skills structure and current codebase facts.
+  - Updated `start.md` run status with this consolidation pass.
+- Files touched:
+  - `skills/ROADMAP.md`
+  - `skills/AUDITS.md` (NEW)
+  - `skills/COMPLETED.md` (NEW)
+  - `skills/PROJECT_CHARTER.md`
+  - `skills/REFERENCES.md`
+  - `skills/AUDIT_BUGS.md` (deleted)
+  - `skills/AUDIT_PERFORMANCE.md` (deleted)
+  - `skills/AUDIT_SECURITY.md` (deleted)
+  - `skills/AUDIT_SEO.md` (deleted)
+  - `skills/AUDIT_UX.md` (deleted)
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (deleted)
+  - `skills/TECH_DEBT.md` (deleted)
+  - `skills/PR_NOTES_PHASE1_BUGFIXES.md` (deleted)
+  - `skills/prompts.md` (deleted)
+  - `README.md`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - Confirmed `skills/` file count is exactly 5 after consolidation.
+  - Confirmed stale references in `README.md` were replaced with canonical skills files.
+  - Confirmed conflicting status notes (for previously open/resolved items) were reconciled into `skills/AUDITS.md`.
+  - No code files were modified in this consolidation pass.
+- Browser check summary:
+  - Not applicable (documentation-only changes).
+- Risks / follow-ups:
+  - Existing code changes from previous run (`src/App.tsx`, `package.json`) remain uncommitted and were not altered in this pass.
+  - Once Node/npm are available, regenerate lockfile and rerun quality gates to align docs with executable validation evidence.
+
+### 2026-03-10 (update 8 — QA Attempt + Skills Category Consolidation)
+- Task: Run bug/QA checks across whole codebase, then merge Skills docs into 4 requested category files.
+- Changes made:
+  - Executed requested QA commands:
+    - `npm run lint`
+    - `npm run test`
+    - `npm run build`
+  - All three commands failed identically in this environment: `zsh:1: command not found: npm`.
+  - Performed fallback static QA sweep and captured key findings:
+    - `dangerouslySetInnerHTML` still present in `TerminalPreview.tsx`.
+    - No test spec files currently present under `src/`.
+    - `tsconfig.app.json` strictness/dead-code flags remain disabled.
+    - `package-lock.json` still contains removed dependencies (stale metadata).
+  - Restructured `skills/` into requested 4 canonical files:
+    - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+    - `skills/ALL_BUGS.md`
+    - `skills/SEO.md`
+    - `skills/UI_UX_FLOW.md`
+  - Removed superseded skills files from previous structure.
+  - Updated docs consistency:
+    - `README.md` Skills documentation table now points to the 4 new files.
+    - `.env.example` key aligned with code (`VITE_SUPABASE_PUBLISHABLE_KEY`).
+    - `start.md` run status updated.
+- Files touched:
+  - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` (NEW)
+  - `skills/ALL_BUGS.md` (NEW)
+  - `skills/SEO.md` (NEW)
+  - `skills/UI_UX_FLOW.md` (NEW)
+  - `skills/ROADMAP.md` (deleted)
+  - `skills/AUDITS.md` (deleted)
+  - `skills/COMPLETED.md` (deleted)
+  - `skills/PROJECT_CHARTER.md` (deleted)
+  - `skills/REFERENCES.md` (deleted)
+  - `README.md`
+  - `.env.example`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> `zsh:1: command not found: npm`
+  - `npm run test` -> `zsh:1: command not found: npm`
+  - `npm run build` -> `zsh:1: command not found: npm`
+  - Static QA completed via repo-wide text/config scans.
+- Browser check summary:
+  - Not executable in this environment (npm/dev server unavailable).
+- Risks / follow-ups:
+  - Full automated QA and browser verification remain pending until Node/npm are available.
+  - Lockfile cleanup/sync remains pending due npm absence.
+
+### 2026-03-10 (update 9 — PR Creation for Current Changes)
+- Task: Read `start.md`/`CLAUDE.md` and create a PR package for all current repo changes.
+- Changes made:
+  - Re-read `start.md` and `CLAUDE.md` for run protocol compliance.
+  - Added PR wiki note at `docs/wiki/2026-03-10-skills-qa-pr.md`.
+  - Updated run tracker in `start.md` with PR packaging status.
+  - Prepared branch/commit workflow for all pending changes.
+- Files touched:
+  - `docs/wiki/2026-03-10-skills-qa-pr.md` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> `zsh:1: command not found: npm`
+  - `npm run test` -> `zsh:1: command not found: npm`
+  - `npm run build` -> `zsh:1: command not found: npm`
+  - `gh --version` -> `zsh:1: command not found: gh`
+- Browser check summary:
+  - Not executable (Node/npm missing).
+- Risks / follow-ups:
+  - PR can be pushed via Git only; GitHub CLI is unavailable.
+  - Full QA/browser verification still pending until toolchain is available.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

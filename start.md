@@ -84,3 +84,28 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 - ~~Configure local Git identity and defaults in `formatmd-new`~~
 - ~~Confirm commit history and clean working tree~~
 - Pending: add remote `origin` and push once target remote URL is provided.
+
+## Current Run Status (2026-03-10 — Prod Readiness Dependency Pass)
+- ~~Read `start.md` and `CLAUDE.md`~~
+- ~~Review `skills/` pending improvements and pick one deployment-focused task~~
+- ~~Remove unused runtime/provider code (`@tanstack/react-query`)~~
+- ~~Remove unused dependency declarations from `package.json`~~
+- Validation blocked: `npm` is unavailable in this environment (`command not found`).
+
+## Current Run Status (2026-03-10 — Skills Consolidation)
+- ~~Read `start.md`, `CLAUDE.md`, and all `skills/` files~~
+- ~~Resolve conflicting status notes against current codebase~~
+- ~~Consolidate overlapping skills docs into canonical set~~
+- ~~Create master production task list and completed ledger~~
+- `skills/` now reduced to 5 canonical files.
+
+## Current Run Status (2026-03-10 — QA Pass + Skills Category Merge)
+- ~~Attempt full QA commands across codebase (`lint`/`test`/`build`)~~
+- QA blocked: `npm` unavailable (`command not found`).
+- ~~Run static bug/QA checks (security hotspots, stale lockfile deps, test coverage presence)~~
+- ~~Re-merge `skills/` into requested 4 category files~~
+
+## Current Run Status (2026-03-10 — PR Packaging)
+- ~~Read `start.md` and `CLAUDE.md`~~
+- ~~Prepare branch + PR-ready commit for all current changes~~
+- `gh` CLI unavailable in environment; PR creation must be completed via GitHub web URL after push.
