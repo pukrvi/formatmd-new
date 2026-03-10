@@ -4,6 +4,7 @@ import { getTheme, ThemeId } from '@/lib/themes';
 import Footer from '@/components/Footer';
 import FeedbackModal from '@/components/FeedbackModal';
 import AnimatedLogo from '@/components/AnimatedLogo';
+import SEOHead from '@/components/SEOHead';
 import {
   FileText, Palette, Download, Copy, Eye, Columns2, Pencil,
   Bold, Code, List, Link2, Tags, Slash, Moon, Sun,
@@ -162,6 +163,11 @@ const Docs = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: c.background }}>
+      <SEOHead
+        title="Documentation — FormatMD"
+        description="Complete guide to FormatMD features — editor modes, formatting toolbar, themes, export options, and live stats."
+        path="/docs"
+      />
       {/* Header */}
       <header
         className="sticky top-0 z-20 px-6 py-3 border-b backdrop-blur-md"

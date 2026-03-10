@@ -128,6 +128,45 @@ Update this file after every completed process/task run.
   - BUG-003 still uses inline `onMouseEnter`/`onMouseLeave` style manipulation alongside CSS transitions — a future refactor could move entirely to CSS custom properties + `:hover` selectors.
   - Footer always renders now (just hidden via CSS). Verify no layout shift on initial load.
 
+### 2026-03-10 — SEO P1 Implementation
+- Task: Implement all 6 SEO tasks from Phase 1 roadmap.
+- Changes made:
+  - **JSON-LD structured data**: Added `WebApplication` schema to `index.html` with name, description, creator (InfinitiGRID), author (Puneet Vishnawat), featureList, and free pricing.
+  - **Missing meta tags**: Added `keywords`, `robots`, `canonical`, `og:url`, `og:locale`, `og:site_name`, `theme-color` (#050a14), `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style`, and Supabase `preconnect`.
+  - **Sitemap**: Created `public/sitemap.xml` with `/` (priority 1.0, weekly) and `/docs` (priority 0.7, monthly). Added `Sitemap:` directive to `robots.txt`.
+  - **Per-page titles**: Added `react-helmet-async` dependency. Created `src/components/SEOHead.tsx` shared component. Wrapped app in `HelmetProvider` in `main.tsx`. Added unique `<SEOHead>` to all 3 pages:
+    - `/` — "FormatMD — Markdown Formatter & Styler"
+    - `/docs` — "Documentation — FormatMD"
+    - `*` — "Page Not Found — FormatMD"
+  - **og:image**: Replaced Lovable CDN URL with self-hosted `public/og-image.svg` (branded SVG with terminal mockup, InfinitiGRID design language).
+  - **twitter:site**: Changed from `@Lovable` to `@InfinitiGRID`. Added `twitter:creator`.
+- Files touched:
+  - `index.html` (full rewrite of `<head>`)
+  - `public/og-image.svg` (NEW)
+  - `public/sitemap.xml` (NEW)
+  - `public/robots.txt` (appended Sitemap directive)
+  - `package.json` (added `react-helmet-async`)
+  - `src/main.tsx` (HelmetProvider wrapper)
+  - `src/components/SEOHead.tsx` (NEW)
+  - `src/pages/Index.tsx` (import + SEOHead usage)
+  - `src/pages/Docs.tsx` (import + SEOHead usage)
+  - `src/pages/NotFound.tsx` (import + SEOHead usage)
+  - `skills/ROADMAP.md`
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: no `@Lovable` or Lovable CDN URLs in production code.
+  - Grep confirms: `SEOHead` imported in all 3 pages, `HelmetProvider` wraps App.
+  - Grep confirms: `react-helmet-async` in package.json dependencies.
+  - Node.js/npm not available — `npm install` and `npm run build` pending.
+- Browser check summary:
+  - Not executable (no dev server). Validate JSON-LD at https://validator.schema.org/ after deploy.
+  - Validate OG tags at https://developers.facebook.com/tools/debug/ after deploy.
+- Risks / follow-ups:
+  - `npm install` required to install `react-helmet-async` before build.
+  - `og-image.svg` is SVG format — some social platforms (Twitter/X) may not render SVG previews. Consider generating a PNG fallback.
+  - `canonical` and `og:url` assume domain `formatmd.app` — update if domain changes.
+  - Per-page `<meta>` overrides rely on `react-helmet-async` deduplication — verify no duplicate tags in production HTML.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

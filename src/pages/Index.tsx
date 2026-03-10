@@ -5,6 +5,7 @@ import AnimatedPlaceholder from '@/components/AnimatedPlaceholder';
 import ScrollArrows from '@/components/ScrollArrows';
 import Footer from '@/components/Footer';
 import FeedbackModal from '@/components/FeedbackModal';
+import SEOHead from '@/components/SEOHead';
 import { getTheme, themes, ThemeId, Theme } from '@/lib/themes';
 import { toast } from 'sonner';
 import { useMarkdownPaste } from '@/hooks/useMarkdownPaste';
@@ -106,6 +107,12 @@ const Index = () => {
     <div
       className="min-h-screen flex flex-col overflow-x-hidden relative transition-colors duration-1000"
       style={{ backgroundColor: hasContent ? theme.colors.background : hintTheme.colors.background }}>
+
+      <SEOHead
+        title="FormatMD — Markdown Formatter & Styler"
+        description="FormatMD transforms your markdown into beautifully styled, copy-ready output. Paste, format, and export in .md, .pdf, .html, .txt."
+        path="/"
+      />
 
       {/* Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">

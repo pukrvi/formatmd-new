@@ -21,16 +21,16 @@
 - [x] BUG-004: Fix animated placeholder getting stuck
 - [x] BUG-006: Deduplicate paste handling into shared hook
 
-### SEO (P1)
-- [ ] A. Add structured data (JSON-LD) to index.html
-- [ ] A. Complete missing meta tags (canonical, og:url, theme-color, keywords)
-- [ ] A. Create sitemap.xml + update robots.txt
-- [ ] A. Add per-page titles via react-helmet-async
-- [ ] A. Fix og:image to use self-hosted asset
-- [ ] A. Fix twitter:site from "@Lovable" to own handle
+### SEO (P1) — COMPLETED 2026-03-10
+- [x] A. Add structured data (JSON-LD) to index.html
+- [x] A. Complete missing meta tags (canonical, og:url, theme-color, keywords)
+- [x] A. Create sitemap.xml + update robots.txt
+- [x] A. Add per-page titles via react-helmet-async
+- [x] A. Fix og:image to use self-hosted asset
+- [x] A. Fix twitter:site from "@Lovable" to own handle
 
 ### Quick Fixes (P1)
-- [ ] Remove unused ReactMarkdown import
+- [x] Remove unused ReactMarkdown import
 - [ ] Align theme naming (vaporwave vs cappuccino)
 - [ ] Fix copy button feedback (inverted state)
 - [ ] Fix theme switch icon semantics
