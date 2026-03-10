@@ -33,16 +33,29 @@ const compressFile = async (file: File): Promise<File> => {
         }
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d')!;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          resolve(file);
+          return;
+        }
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob(
           (blob) => {
             URL.revokeObjectURL(url);
-            resolve(new File([blob!], file.name, { type: 'image/jpeg' }));
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
           },
           'image/jpeg',
           0.7
         );
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(file);
       };
       img.src = url;
     });
@@ -61,8 +74,20 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
+    const remainingSlots = Math.max(0, 3 - files.length);
+    if (remainingSlots === 0) {
+      toast.info('Maximum of 3 attachments reached');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    const filesToProcess = newFiles.slice(0, remainingSlots);
+    if (newFiles.length > remainingSlots) {
+      toast.info(`Only ${remainingSlots} additional file(s) can be attached`);
+    }
+
     const valid: File[] = [];
-    for (const f of newFiles) {
+    for (const f of filesToProcess) {
       if (f.size > MAX_FILE_SIZE) {
         toast.error(`${f.name} exceeds 5MB limit`);
         continue;
@@ -70,7 +95,7 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
       const compressed = await compressFile(f);
       valid.push(compressed);
     }
-    setFiles((prev) => [...prev, ...valid].slice(0, 3));
+    setFiles((prev) => [...prev, ...valid]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -89,9 +114,14 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
       // Upload files to storage
       const uploadedPaths: string[] = [];
       for (const file of files) {
-        const path = `feedback/${Date.now()}-${file.name}`;
+        const uniqueId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const safeName = file.name.replace(/[^\w.-]/g, '_');
+        const path = `feedback/${uniqueId}-${safeName}`;
         const { error } = await supabase.storage.from('feedback-attachments').upload(path, file);
-        if (!error) uploadedPaths.push(path);
+        if (error) {
+          throw new Error(`Attachment upload failed for ${file.name}: ${error.message}`);
+        }
+        uploadedPaths.push(path);
       }
 
       // Insert feedback

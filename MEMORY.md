@@ -100,6 +100,43 @@ Update this file after every completed process/task run.
 - Risks / follow-ups:
   - Keep `start.md` and `CLAUDE.md` aligned when workflow rules change.
 
+### 2026-03-10 (update 4)
+- Task: production-readiness pass for optimization, performance, and bug audit (code changes in `formatmd-new` only).
+- Run tracker:
+  - ~~Read `start.md` and `CLAUDE.md`~~
+  - ~~Use skills flow to discover available skill support~~
+  - ~~Audit and patch key reliability/performance issues~~
+  - ~~Update run status with strike-through items~~
+  - Automated checks blocked: Node/npm not installed in environment.
+- Changes made:
+  - `src/lib/markdownToHtml.ts`
+    - Fixed fragile table parsing/open-close behavior.
+    - Removed dead sentinel logic and added deterministic table state handling.
+    - Added safer link URL sanitization for rendered anchor tags.
+  - `src/components/TerminalPreview.tsx`
+    - Removed deprecated `document.execCommand` usage.
+    - Switched paste insertion to controlled-state update + cursor restoration.
+  - `src/components/FeedbackModal.tsx`
+    - Hardened image compression fallback paths (`canvas`/`toBlob` failure handling).
+    - Added attachment slot enforcement and clearer user feedback.
+    - Improved upload key safety (`randomUUID` fallback + filename sanitization).
+    - Made attachment upload failures explicit instead of silent partial success.
+  - `start.md`
+    - Added current run status with struck-through completed items.
+- Files touched:
+  - `src/lib/markdownToHtml.ts`
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/FeedbackModal.tsx`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - Attempted `npm run lint` but `npm` is unavailable (`command not found`).
+  - Node/npm check confirms runtime is not installed in this environment.
+- Browser check summary:
+  - Blocked (cannot run app without Node/npm toolchain).
+- Risks / follow-ups:
+  - Run full validation (`lint`, `test`, `build`) and browser sanity checks once Node/npm are available.
+
 ### 2026-03-10 — Phase 1 Bug Fixes (P0)
 - Task: Fix all 5 Phase 1 bugs from ROADMAP.md
 - Changes made:
@@ -166,6 +203,115 @@ Update this file after every completed process/task run.
   - `og-image.svg` is SVG format — some social platforms (Twitter/X) may not render SVG previews. Consider generating a PNG fallback.
   - `canonical` and `og:url` assume domain `formatmd.app` — update if domain changes.
   - Per-page `<meta>` overrides rely on `react-helmet-async` deduplication — verify no duplicate tags in production HTML.
+
+### 2026-03-10 — Quick Fixes P1 + Footer Regression
+- Task: 4 quick fixes + critical footer/editor transition bug.
+- Changes made:
+  - **Footer regression fix**: Changed footer wrapper from `maxHeight` CSS transition (which stayed in flex flow and blocked editor layout) to `position: fixed` with `translateY(100%)` transform. Footer is now out of document flow entirely, preventing interference with the editor's `h-screen` flex layout.
+  - **Theme naming alignment**: Renamed CSS class `theme-cappuccino` → `theme-vaporwave` in `index.css` and `themes.ts`. Renamed variable `isCappuccino` → `isVaporwave` in `TerminalPreview.tsx`. Theme IDs, CSS classes, and variable names now all use `vaporwave` consistently.
+  - **Copy button feedback**: Swapped inverted styles — "Copied!" state now shows prominent green background (`theme.colors.heading`), default "Copy" shows subtle transparent background (`heading + 20` opacity).
+  - **Theme switch icon semantics**: Swapped Sun/Moon icons — Sun now shows in dark mode (indicating "switch to light"), Moon shows in light mode (indicating "switch to dark").
+  - **Theme persistence**: Added `localStorage.getItem('formatmd-theme')` in `useState` initializer with validation. Added `localStorage.setItem` in the theme-class effect. Also updated `classList.remove` to reference `theme-vaporwave` instead of old `theme-cappuccino`.
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `src/components/TerminalPreview.tsx`
+  - `src/lib/themes.ts`
+  - `src/index.css`
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: zero `cappuccino` references in `src/` directory.
+  - Grep confirms: `cappuccino` only remains in `skills/` documentation files (no code impact).
+  - Node.js/npm not available — `npm run build` and `npm run lint` pending.
+- Browser check summary:
+  - Not executable (no dev server). Key areas to verify:
+    - Paste text on homepage → editor should load without animation sticking.
+    - Theme toggle should persist across page refresh.
+    - Copy button should show green "Copied!" feedback after clicking.
+    - Sun icon in dark mode, Moon icon in light mode.
+- Risks / follow-ups:
+  - Footer is now `position: fixed` — verify it doesn't overlap content on short viewports.
+  - Run `npm run build` when Node.js is available to confirm no type errors from renamed variables.
+  - `skills/ROADMAP.md` and `skills/AUDIT_BUGS.md` still reference "cappuccino" in documentation — update if consistency matters.
+
+### 2026-03-10 — Production-Ready Docs + Lovable Removal + Code Optimization Audit
+- Task: Rewrite README as production-ready docs. Remove all Lovable branding. Sync all documentation files. Create comprehensive code optimization audit.
+- Changes made:
+  - **README.md**: Complete rewrite from Lovable scaffold template to production-ready FormatMD documentation with features, tech stack, setup instructions, project structure, themes, routes, deployment, and contributing guide.
+  - **vite.config.ts**: Removed `lovable-tagger` import and `componentTagger()` plugin. Simplified `defineConfig` signature (no longer needs `mode` param).
+  - **package.json**: Removed `lovable-tagger` from devDependencies.
+  - **Docs.tsx**: Fixed "Light Mode (Cappuccino)" → "Light Mode (Vaporwave)" in feature card.
+  - **REFERENCES.md**: Replaced Lovable deployment docs with Vercel/Netlify/Cloudflare deployment options.
+  - **PROJECT_CHARTER.md**: Changed deployment from "Lovable platform" to "Static SPA (Vercel / Netlify / Cloudflare Pages)".
+  - **ROADMAP.md**: Changed "Connect custom domain via Lovable settings" → "via hosting platform".
+  - **AUDIT_BUGS.md**: Full rewrite with current status of all 12 bugs (9 fixed, 3 open).
+  - **AUDIT_SEO.md**: Marked all items as resolved with fix descriptions.
+  - **AUDIT_UX.md**: Marked A11Y-001, A11Y-002, UX-001, UX-003 as fixed.
+  - **CODE_OPTIMIZATION_AUDIT.md**: NEW — comprehensive optimization plan with 30+ items across 7 categories (dead code, decomposition, performance, TypeScript, structure, CSS, testing), prioritized execution plan in 4 phases.
+  - **.env.example**: NEW — template for required environment variables.
+- Files touched:
+  - `README.md`
+  - `vite.config.ts`
+  - `package.json`
+  - `src/pages/Docs.tsx`
+  - `skills/REFERENCES.md`
+  - `skills/PROJECT_CHARTER.md`
+  - `skills/ROADMAP.md`
+  - `skills/AUDIT_BUGS.md`
+  - `skills/AUDIT_SEO.md`
+  - `skills/AUDIT_UX.md`
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (NEW)
+  - `.env.example` (NEW)
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: zero Lovable references in source code (`src/`, `vite.config.ts`, `package.json`, `README.md`).
+  - Grep confirms: remaining Lovable mentions only in historical changelog entries (MEMORY.md, ROADMAP.md) — appropriate context.
+  - Grep confirms: zero `cappuccino` references in `src/` directory.
+  - Node.js/npm not available — `npm install` (to remove lovable-tagger from node_modules) and `npm run build` pending.
+- Browser check summary:
+  - Not executable (no dev server). No UI code changed — only Docs.tsx text label update.
+- Risks / follow-ups:
+  - Run `npm install` to regenerate `package-lock.json` without `lovable-tagger`.
+  - `bun.lock` still references `lovable-tagger` — will be cleaned on next `bun install`.
+  - Docs page still hardcodes `themeId = 'infiniti'` instead of reading from localStorage — follow-up for theme sync.
+
+### 2026-03-10 — Code Optimization Implementation (Phase A+B)
+- Task: Implement optimizations from CODE_OPTIMIZATION_AUDIT.md Phase A and B.
+- Changes made:
+  - **TerminalPreview.tsx refactored** (482 → ~275 LOC):
+    - Imports `markdownToStyledHtml` from `@/lib/markdownToHtml` instead of inline `getStyledHTML()` (~125 LOC removed)
+    - Imports `downloadMarkdown` from `@/lib/downloadHandler` instead of inline download logic (~32 LOC removed)
+    - Uses `useMemo(() => markdownToStyledHtml(markdown, theme), [markdown, theme])` for memoized HTML
+    - Removed unused `themes` import, `isUniformTheme` and `highlightBg` variables
+    - Changed download dropdown z-index from `z-[9999]` to `z-50`
+  - **New utility files created**:
+    - `src/lib/markdownToHtml.ts` (135 LOC) — extracted markdown→styled HTML renderer
+    - `src/lib/downloadHandler.ts` (39 LOC) — extracted download/export logic
+    - `src/lib/constants.ts` (9 LOC) — centralized app constants
+  - **App.tsx rewritten**: Removed Radix Toaster, added `React.lazy()` for Docs/NotFound, wrapped in Suspense
+  - **sonner.tsx rewritten**: Removed `next-themes` dependency, hardcoded `theme="dark"`
+  - **package.json cleaned**: Removed 22 unused dependencies (17 Radix packages, recharts, embla-carousel-react, cmdk, input-otp, react-day-picker, date-fns, next-themes, react-resizable-panels, react-markdown, react-hook-form, @hookform/resolvers, vaul, zod). Only 3 Radix packages remain.
+  - **Dead code deleted**: MarkdownInput.tsx, NavLink.tsx, use-mobile.tsx, use-toast.ts, example.test.ts, 42+ unused shadcn/ui components, Radix toaster.tsx/toast.tsx
+  - **Background animations**: Added `animationPlayState` pause when editor is active
+  - **CODE_OPTIMIZATION_AUDIT.md**: Updated with strikethrough on all completed items
+- Files touched:
+  - `src/components/TerminalPreview.tsx` (rewrite)
+  - `src/lib/markdownToHtml.ts` (NEW)
+  - `src/lib/downloadHandler.ts` (NEW)
+  - `src/lib/constants.ts` (NEW)
+  - `src/App.tsx` (rewrite)
+  - `src/components/ui/sonner.tsx` (rewrite)
+  - `package.json` (22 deps removed)
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (status updates)
+  - 45+ files deleted (dead components, hooks, UI primitives)
+- Completed OPTs: 001, 002, 003, 004, 005, 006, 010, 011, 021, 023, 026, 040, 041, 052
+- Pending from Phase B: OPT-030, OPT-043
+- Validation run:
+  - Grep confirms: no broken imports of deleted files in remaining source
+  - Node.js/npm not available — `npm install` and `npm run build` pending
+- Risks / follow-ups:
+  - Must run `npm install` to regenerate lockfile after 22 dependency removals
+  - Run `npm run build` to confirm no type errors from TerminalPreview refactor
+  - Constants file created but not yet wired into Index.tsx/SEOHead.tsx — can be done incrementally
 
 ## Entry Template (use for every future update)
 - Date:

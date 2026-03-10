@@ -12,7 +12,10 @@ import { useMarkdownPaste } from '@/hooks/useMarkdownPaste';
 
 const Index = () => {
   const [markdown, setMarkdown] = useState('');
-  const [themeId, setThemeId] = useState<ThemeId>('infiniti');
+  const [themeId, setThemeId] = useState<ThemeId>(() => {
+    const saved = localStorage.getItem('formatmd-theme');
+    return saved === 'infiniti' || saved === 'vaporwave' ? saved : 'infiniti';
+  });
   const [isCopied, setIsCopied] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const [hintThemeIndex, setHintThemeIndex] = useState(0);
@@ -33,14 +36,15 @@ const Index = () => {
     }
   }, [markdown, hasContent]);
 
-  // Apply theme class to document
+  // Apply theme class to document and persist
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('theme-clean', 'theme-cappuccino');
+    root.classList.remove('theme-clean', 'theme-vaporwave');
     if (theme.className) {
       root.classList.add(theme.className);
     }
-  }, [theme]);
+    localStorage.setItem('formatmd-theme', themeId);
+  }, [theme, themeId]);
 
   const handleCopy = async () => {
     if (!previewRef.current) return;
@@ -114,20 +118,20 @@ const Index = () => {
         path="/"
       />
 
-      {/* Ambient Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {/* Ambient Background — paused when editor is active to save GPU */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ animationPlayState: hasContent ? 'paused' : 'running' }}>
         <div
           className="absolute -top-40 -right-40 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float transition-colors duration-1000"
-          style={{ backgroundColor: landingTheme.colors.heading }} />
+          style={{ backgroundColor: landingTheme.colors.heading, animationPlayState: hasContent ? 'paused' : 'running' }} />
         <div
           className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full blur-3xl opacity-15 transition-colors duration-1000"
-          style={{ backgroundColor: landingTheme.colors.keyword }} />
+          style={{ backgroundColor: landingTheme.colors.keyword, animationPlayState: hasContent ? 'paused' : 'running' }} />
         <div
           className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-10 transition-colors duration-1000"
-          style={{ backgroundColor: landingTheme.colors.heading }} />
+          style={{ backgroundColor: landingTheme.colors.heading, animationPlayState: hasContent ? 'paused' : 'running' }} />
         <div
           className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full blur-3xl opacity-10 transition-colors duration-1000"
-          style={{ backgroundColor: landingTheme.colors.keyword }} />
+          style={{ backgroundColor: landingTheme.colors.keyword, animationPlayState: hasContent ? 'paused' : 'running' }} />
       </div>
 
       {/* Main Content */}
@@ -228,13 +232,12 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Footer - fades out when content is present */}
+      {/* Footer - absolutely positioned so it never disrupts flex layout */}
       <div
-        className="transition-all duration-700 ease-out"
+        className="fixed bottom-0 left-0 right-0 z-20 transition-all duration-700 ease-out"
         style={{
           opacity: hasContent ? 0 : 1,
-          maxHeight: hasContent ? 0 : '200px',
-          overflow: 'hidden',
+          transform: hasContent ? 'translateY(100%)' : 'translateY(0)',
           pointerEvents: hasContent ? 'none' : 'auto',
         }}
       >

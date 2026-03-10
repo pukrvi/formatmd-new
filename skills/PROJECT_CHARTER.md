@@ -23,7 +23,7 @@ FormatMD is a web-based markdown formatter and styler that lets users paste mark
 | Backend      | Supabase (PostgreSQL + Storage + Auth available) |
 | Data         | TanStack Query 5                                 |
 | Fonts        | Poppins (UI) + Fira Code (editor)               |
-| Deployment   | Lovable platform                                 |
+| Deployment   | Static SPA (Vercel / Netlify / Cloudflare Pages) |
 
 ---
 

@@ -1,21 +1,20 @@
 # FormatMD — UX & Accessibility Audit
 
 > Audited: 2026-03-09
+> Updated: 2026-03-10 (status refreshed)
 
 ---
 
 ## Accessibility (A11y) Issues
 
-### A11Y-001: No keyboard focus states on toolbar — HIGH
+### A11Y-001: No keyboard focus states on toolbar — FIXED (Phase 1)
 - **File:** `src/components/MarkdownToolbar.tsx:259-274`
 - Only `mouseEnter`/`mouseLeave` handlers. No `onFocus`/`onBlur`.
 - Tab navigation gives no visual feedback.
 - **Fix:** Add `focus-visible:ring-2 focus-visible:ring-offset-2` classes. Add `aria-label` to every icon button.
 
-### A11Y-002: Toolbar buttons lack aria-labels
-- **File:** `src/components/MarkdownToolbar.tsx`
-- Icon-only buttons with no accessible names.
-- **Fix:** Add `aria-label="Bold"`, `aria-label="Heading 1"`, etc. to each button.
+### A11Y-002: Toolbar buttons lack aria-labels — FIXED (Phase 1)
+- **Resolution:** Added `aria-label` to every icon button in MarkdownToolbar.tsx.
 
 ### A11Y-003: Feedback modal accessibility gaps
 - **File:** `src/components/FeedbackModal.tsx`
@@ -66,21 +65,16 @@
 
 ## UX Anti-Patterns
 
-### UX-001: No theme persistence
-- **File:** `src/pages/Index.tsx:14`
-- Theme resets to 'infiniti' on every page load. No `localStorage`.
-- Docs page hardcodes theme to 'infiniti', ignoring user preference.
-- **Fix:** Persist to `localStorage`. Read on mount. Sync across pages.
+### UX-001: No theme persistence — FIXED (Quick Fixes P1)
+- **Resolution:** Added `localStorage` persistence for theme. Reads on mount with validation, writes on change. Docs page still hardcodes `infiniti` — syncing across pages is a follow-up.
 
 ### UX-002: No debounce on markdown preview
 - **File:** `src/components/TerminalPreview.tsx:44-49`
 - `getStyledHTML()` runs on every keystroke. Complex regex + table parsing on each character.
 - **Fix:** Debounce preview render by 150-300ms. Keep stats immediate.
 
-### UX-003: Two different paste implementations
-- **File:** `src/pages/Index.tsx:93` vs `src/components/TerminalPreview.tsx:437`
-- Inconsistent behavior between landing page paste and editor paste.
-- **Fix:** Single `useMarkdownPaste` hook shared by both.
+### UX-003: Two different paste implementations — FIXED (Phase 1)
+- **Resolution:** Created shared `useMarkdownPaste` hook. Both Index.tsx and TerminalPreview.tsx use it with different insertion strategies.
 
 ### UX-004: No error boundaries
 - If any component crashes, entire app shows blank page.

@@ -120,7 +120,7 @@ const Docs = () => {
         },
         {
           icon: <Sun className="w-4 h-4" style={{ color: c.heading }} />,
-          title: 'Light Mode (Cappuccino)',
+          title: 'Light Mode (Vaporwave)',
           description: 'Warm, paper-like theme with brown accents and highlighted headings for comfortable reading.',
         },
       ],

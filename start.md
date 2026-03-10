@@ -70,3 +70,11 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 2. Confirm quality + browser checks were handled.
 3. Update `MEMORY.md`.
 4. Summarize exactly what changed and what remains.
+
+## Current Run Status (2026-03-10)
+- ~~Read `start.md` and `CLAUDE.md`~~
+- ~~Use skills flow to discover relevant audit capabilities~~
+- ~~Run static bug/performance/code-quality audit~~
+- ~~Implement production hardening changes in `formatmd-new`~~
+- ~~Update run tracker and memory log~~
+- Automated validation (`lint`/`test`/`build`) blocked: Node/npm not installed in this environment.

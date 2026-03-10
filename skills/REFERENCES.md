@@ -85,9 +85,11 @@
 
 ## Deployment
 
-- Lovable docs: https://docs.lovable.dev/
-- Custom domains: Project > Settings > Domains in Lovable dashboard
-- Alternative: Vercel, Netlify, Cloudflare Pages (Vite-compatible)
+FormatMD is a static Vite SPA. Compatible hosting platforms:
+
+- **Vercel** — `vercel --prod` or connect repo
+- **Netlify** — build: `npm run build`, publish: `dist/`
+- **Cloudflare Pages** — connect repo, framework preset: Vite
 
 ---
 

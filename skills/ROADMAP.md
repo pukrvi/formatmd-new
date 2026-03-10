@@ -29,12 +29,13 @@
 - [x] A. Fix og:image to use self-hosted asset
 - [x] A. Fix twitter:site from "@Lovable" to own handle
 
-### Quick Fixes (P1)
+### Quick Fixes (P1) — COMPLETED 2026-03-10
 - [x] Remove unused ReactMarkdown import
-- [ ] Align theme naming (vaporwave vs cappuccino)
-- [ ] Fix copy button feedback (inverted state)
-- [ ] Fix theme switch icon semantics
-- [ ] Persist theme to localStorage
+- [x] Align theme naming (vaporwave vs cappuccino)
+- [x] Fix copy button feedback (inverted state)
+- [x] Fix theme switch icon semantics
+- [x] Persist theme to localStorage
+- [x] Fix footer/editor transition regression (editor animation stuck after paste)
 
 ---
 
@@ -101,7 +102,7 @@
 - [ ] E. Status labels: planned, in progress, shipped
 
 ### Domain Linking (P2) — Task F
-- [ ] F. Connect custom domain via Lovable settings
+- [ ] F. Connect custom domain via hosting platform
 - [ ] F. Update all og:url, canonical, sitemap URLs
 - [ ] F. Set up SSL
 

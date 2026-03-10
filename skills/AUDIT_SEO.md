@@ -1,23 +1,22 @@
 # FormatMD — SEO Audit
 
 > Audited: 2026-03-09
+> Updated: 2026-03-10 (all items resolved in SEO P1 sprint)
 
 ---
 
-## Current State
+## Current State — RESOLVED
 
-### What Exists
-- Basic `<title>` and `<meta description>` in `index.html`
-- Open Graph tags (og:title, og:description, og:image)
-- Twitter Card tags (twitter:card, twitter:image)
-- `robots.txt` allowing all bots
+All SEO issues identified in the original audit have been fixed:
 
-### What's Wrong
-- `og:image` points to external Lovable preview URL (will break if Lovable changes)
-- `twitter:site` is "@Lovable" — should be FormatMD's own handle
-- `og:url` is missing
-- No canonical URL
-- No sitemap
+- ~~`og:image` points to external preview URL~~ — **FIXED:** Self-hosted `og-image.svg`
+- ~~`twitter:site` is wrong handle~~ — **FIXED:** Changed to `@InfinitiGRID`
+- ~~`og:url` is missing~~ — **FIXED:** Added to `index.html`
+- ~~No canonical URL~~ — **FIXED:** Added `<link rel="canonical">`
+- ~~No sitemap~~ — **FIXED:** Created `public/sitemap.xml` + updated `robots.txt`
+- ~~No structured data~~ — **FIXED:** Added JSON-LD `WebApplication` schema
+- ~~No per-page titles~~ — **FIXED:** Added `react-helmet-async` with `SEOHead` component
+- ~~Missing meta tags~~ — **FIXED:** Added keywords, robots, theme-color, og:locale, PWA tags, Supabase preconnect
 
 ---
 

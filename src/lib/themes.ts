@@ -32,7 +32,7 @@ export const themes: Theme[] = [
   {
     id: 'vaporwave',
     name: 'Light',
-    className: 'theme-cappuccino',
+    className: 'theme-vaporwave',
     colors: {
       background: '#FDF6E3',
       heading: '#5C4033',
