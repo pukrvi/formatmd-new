@@ -24,3 +24,6 @@
 - Next technical pass should:
   1. Replace `require()` usage in `tailwind.config.ts` with ESM import style accepted by lint rules.
   2. Add baseline test files so `vitest run` exits successfully.
+
+## PR Link
+- `https://github.com/pukrvi/formatmd-new/pull/new/fix/footer-fold-docs-pr-2026-03-10`

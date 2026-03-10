@@ -124,4 +124,5 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 - ~~Run QA gate in GitHub-backed repo clone~~
 - ~~Update `skills/` canonical tracker with current QA outputs~~
 - ~~Package current homepage/footer/docs changes for PR~~
-- Pending external action: open and merge PR via GitHub web URL (no `gh` CLI in environment).
+- ~~Push branch to `origin` and generate PR URL~~
+- Pending external action: review and merge PR via GitHub web UI.
