@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init)",
+      "Bash(git branch -m main)",
+      "Bash(git add .gitignore README.md CLAUDE.md start.md components.json eslint.config.js index.html package.json package-lock.json bun.lock bun.lockb postcss.config.js tailwind.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts vitest.config.ts public/ supabase/ src/ skills/ MEMORY.md)",
+      "Bash(git commit:*)",
+      "Bash(git add skills/PR_NOTES_PHASE1_BUGFIXES.md)",
+      "Bash(printf '\\\\nSitemap: https://formatmd.app/sitemap.xml\\\\n')",
+      "Bash(git add index.html package.json public/og-image.svg public/sitemap.xml public/robots.txt src/main.tsx src/components/SEOHead.tsx src/pages/Index.tsx src/pages/Docs.tsx src/pages/NotFound.tsx MEMORY.md skills/ROADMAP.md)",
+      "Bash(find /Users/gtmbuddy/Documents/formatmd/formatmd-new/src -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" \\\\\\) -exec wc -l {} +)",
+      "Bash(grep -r \"from ''@/components/ui/\" /Users/gtmbuddy/Documents/formatmd/formatmd-new/src --include=\"*.ts\" --include=\"*.tsx\")",
+      "Bash(node -e \"const pkg = require\\(''./package.json''\\); const deps = Object.keys\\({...pkg.dependencies, ...pkg.devDependencies}\\); console.log\\(deps.sort\\(\\).join\\(''\\\\n''\\)\\)\")"
+    ]
+  }
+}

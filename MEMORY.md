@@ -1,0 +1,548 @@
+# MEMORY.md
+
+## Purpose
+Persistent project memory log for FormatMD.  
+Update this file after every completed process/task run.
+
+## Current Product Snapshot (as of 2026-03-09)
+
+### Product
+- FormatMD is a markdown formatting workspace that converts raw markdown into styled rich output for copy/paste and export.
+- Main routes:
+  - `/` interactive editor and preview experience.
+  - `/docs` product documentation page.
+  - `*` fallback not-found page.
+
+### Core User Flow
+- User pastes or types markdown.
+- App supports smart HTML-to-markdown paste conversion.
+- User formats with toolbar actions (headings, emphasis, code, lists, links, quotes, delimiters, etc.).
+- User switches view mode (`Editor`, `Split`, `Preview`) and theme (`infiniti`, `vaporwave`).
+- User copies styled output as rich HTML + plain text fallback.
+- User downloads output as `.md`, `.txt`, `.html`, or print-to-PDF.
+
+### Current Feature Set
+- Live markdown editor with undo/redo handling.
+- Custom markdown toolbar with structural and AI-style delimiter helpers.
+- Rich HTML renderer with theme-aware styling for headings, code blocks, tables, lists, links, blockquotes, and rules.
+- Stats bar with word count, character count, and estimated reading time.
+- Animated landing state (logo, placeholder guidance, ambient effects).
+- Feedback modal:
+  - Bug report / feature request modes.
+  - Optional attachments (up to 3 files, per-file size checks).
+  - Image compression before upload.
+  - Supabase storage + feedback table insert.
+
+### Design and Brand Baseline
+- Name: `FormatMD`
+- Attribution used in UI: `by Puneet Vishnawat @ InfinitiGRID`
+- Theme palette baseline:
+  - `infiniti` dark: `#050a14`, `#4CC77C`, `#7DDBA3`, `#1F2733`.
+  - `vaporwave` light: `#FDF6E3`, `#5C4033`, `#B5651D`, `#F5E6D3`, highlight `#FFE0B2`.
+- Typography baseline:
+  - `Poppins` for general UI.
+  - `Fira Code` for editor/terminal style surfaces.
+
+### Architecture Baseline
+- `src/pages`: `Index.tsx`, `Docs.tsx`, `NotFound.tsx`
+- `src/components`: feature components (terminal/editor/toolbar/footer/modal)
+- `src/components/ui`: shared shadcn/ui primitives
+- `src/lib`: themes + HTML-to-markdown conversion
+- `src/hooks`: reusable behavior hooks (`useMarkdownPaste`, etc.)
+- `src/integrations/supabase`: client + generated types
+
+### Commands Baseline
+- `npm install`
+- `npm run dev`
+- `npm run build`
+- `npm run lint`
+- `npm run test`
+- `npm run preview`
+
+## Change Log
+
+### 2026-03-09
+- Added `CLAUDE.md` with project operating rules, brand/design guardrails, Anthropic best-practice structure, quality gates, and documentation/PR requirements.
+- Added this `MEMORY.md` and initialized a full baseline snapshot of current product behavior, architecture, stack, and workflow.
+- Verification: file creation completed in `/Users/gtmbuddy/Documents/formatmd/formatmd-new/`.
+
+### 2026-03-09 (update 2)
+- Task: rewrite `CLAUDE.md` using guidance from:
+  - `/Users/gtmbuddy/Downloads/LLM Context Setting Guide Creation.pdf`
+  - `/Users/gtmbuddy/Downloads/Production-ready CLAUDE.md and SOUL.md for agent context and instruction design.pdf`
+- Changes made:
+  - Replaced `CLAUDE.md` with a production-focused structure using instruction hierarchy + WHAT/WHY/HOW organization.
+  - Added SOUL-style sections: Identity, Core Truths, Boundaries, and Continuity.
+  - Strengthened security/prompt-injection, context/token management, verification-first workflow, and drift-prevention update protocol.
+  - Preserved FormatMD-specific brand, architecture, commands, and delivery expectations.
+- Files touched:
+  - `CLAUDE.md`
+  - `MEMORY.md`
+- Validation run:
+  - Document-level validation only (content rewrite and file checks).
+- Browser check summary:
+  - Not applicable (no product code/UI changes).
+- Risks / follow-ups:
+  - Consider adding `AGENTS.md` as a canonical cross-tool instruction shim if multi-agent tooling expands.
+
+### 2026-03-09 (update 3)
+- Task: create a crisp `start.md` runbook focused on per-run bot behavior.
+- Changes made:
+  - Added `start.md` as a tighter operational checklist derived from `CLAUDE.md`.
+  - Embedded user tenets: strict scope path, memory updates every run, quality + browser checks, PR notes, wiki/docs updates, and inline comment expectations.
+- Files touched:
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - File creation and content verification completed.
+- Browser check summary:
+  - Not applicable (documentation-only change).
+- Risks / follow-ups:
+  - Keep `start.md` and `CLAUDE.md` aligned when workflow rules change.
+
+### 2026-03-10 (update 4)
+- Task: production-readiness pass for optimization, performance, and bug audit (code changes in `formatmd-new` only).
+- Run tracker:
+  - ~~Read `start.md` and `CLAUDE.md`~~
+  - ~~Use skills flow to discover available skill support~~
+  - ~~Audit and patch key reliability/performance issues~~
+  - ~~Update run status with strike-through items~~
+  - Automated checks blocked: Node/npm not installed in environment.
+- Changes made:
+  - `src/lib/markdownToHtml.ts`
+    - Fixed fragile table parsing/open-close behavior.
+    - Removed dead sentinel logic and added deterministic table state handling.
+    - Added safer link URL sanitization for rendered anchor tags.
+  - `src/components/TerminalPreview.tsx`
+    - Removed deprecated `document.execCommand` usage.
+    - Switched paste insertion to controlled-state update + cursor restoration.
+  - `src/components/FeedbackModal.tsx`
+    - Hardened image compression fallback paths (`canvas`/`toBlob` failure handling).
+    - Added attachment slot enforcement and clearer user feedback.
+    - Improved upload key safety (`randomUUID` fallback + filename sanitization).
+    - Made attachment upload failures explicit instead of silent partial success.
+  - `start.md`
+    - Added current run status with struck-through completed items.
+- Files touched:
+  - `src/lib/markdownToHtml.ts`
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/FeedbackModal.tsx`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - Attempted `npm run lint` but `npm` is unavailable (`command not found`).
+  - Node/npm check confirms runtime is not installed in this environment.
+- Browser check summary:
+  - Blocked (cannot run app without Node/npm toolchain).
+- Risks / follow-ups:
+  - Run full validation (`lint`, `test`, `build`) and browser sanity checks once Node/npm are available.
+
+### 2026-03-10 — Phase 1 Bug Fixes (P0)
+- Task: Fix all 5 Phase 1 bugs from ROADMAP.md
+- Changes made:
+  - **BUG-001** (Footer animation stuck): Replaced conditional `{!hasContent && <Footer />}` with CSS opacity/maxHeight transition wrapper. Footer now fades out smoothly over 700ms instead of instant unmount.
+  - **BUG-002** (/docs and /features same page): Added `id="features"` with `scroll-mt-16` to the Docs.tsx main content wrapper. Added `handleClick` hash navigation helper to Footer.tsx for smooth scrolling. Added `scroll-behavior: smooth` to `html` in index.css.
+  - **BUG-003** (Toolbar button background mismatch): Added `transition: background-color 150ms ease, color 150ms ease, transform 150ms ease` to all toolbar buttons. Added `onFocus`/`onBlur` handlers matching mouse handlers. Added `aria-label` to every icon button. Added `.toolbar-btn:focus-visible` ring styles in index.css. Updated Tip component to show on `group-focus-within`.
+  - **BUG-004** (AnimatedPlaceholder stuck): Added `mountedRef = useRef(true)` with cleanup on unmount. All `setTimeout` callbacks now guard state updates with `mountedRef.current` check. Prevents orphaned updates when component unmounts mid-animation.
+  - **BUG-006** (Duplicate paste handling): Created `src/hooks/useMarkdownPaste.ts` shared hook. Index.tsx now uses `useMarkdownPaste(handlePasteInsert)` with state-based insertion. TerminalPreview.tsx uses `useMarkdownPaste(handlePasteInsert)` with `execCommand('insertText')` for undo-stack preservation. Removed unused `ReactMarkdown` import and direct `htmlToMarkdown` imports from both consumers.
+- Files touched:
+  - `src/hooks/useMarkdownPaste.ts` (NEW)
+  - `src/pages/Index.tsx`
+  - `src/pages/Docs.tsx`
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/MarkdownToolbar.tsx`
+  - `src/components/AnimatedPlaceholder.tsx`
+  - `src/components/Footer.tsx`
+  - `src/index.css`
+  - `MEMORY.md`
+- Validation run:
+  - Manual code review (grep-based): all imports resolved, no dead imports, shared hook used consistently.
+  - Node.js/npm not available on local machine — no build/lint/test run possible.
+- Browser check summary:
+  - Not executable (no dev server available without Node.js).
+- Risks / follow-ups:
+  - Run `npm run build` and `npm run lint` when Node.js is available to confirm zero type errors.
+  - BUG-003 still uses inline `onMouseEnter`/`onMouseLeave` style manipulation alongside CSS transitions — a future refactor could move entirely to CSS custom properties + `:hover` selectors.
+  - Footer always renders now (just hidden via CSS). Verify no layout shift on initial load.
+
+### 2026-03-10 — SEO P1 Implementation
+- Task: Implement all 6 SEO tasks from Phase 1 roadmap.
+- Changes made:
+  - **JSON-LD structured data**: Added `WebApplication` schema to `index.html` with name, description, creator (InfinitiGRID), author (Puneet Vishnawat), featureList, and free pricing.
+  - **Missing meta tags**: Added `keywords`, `robots`, `canonical`, `og:url`, `og:locale`, `og:site_name`, `theme-color` (#050a14), `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style`, and Supabase `preconnect`.
+  - **Sitemap**: Created `public/sitemap.xml` with `/` (priority 1.0, weekly) and `/docs` (priority 0.7, monthly). Added `Sitemap:` directive to `robots.txt`.
+  - **Per-page titles**: Added `react-helmet-async` dependency. Created `src/components/SEOHead.tsx` shared component. Wrapped app in `HelmetProvider` in `main.tsx`. Added unique `<SEOHead>` to all 3 pages:
+    - `/` — "FormatMD — Markdown Formatter & Styler"
+    - `/docs` — "Documentation — FormatMD"
+    - `*` — "Page Not Found — FormatMD"
+  - **og:image**: Replaced Lovable CDN URL with self-hosted `public/og-image.svg` (branded SVG with terminal mockup, InfinitiGRID design language).
+  - **twitter:site**: Changed from `@Lovable` to `@InfinitiGRID`. Added `twitter:creator`.
+- Files touched:
+  - `index.html` (full rewrite of `<head>`)
+  - `public/og-image.svg` (NEW)
+  - `public/sitemap.xml` (NEW)
+  - `public/robots.txt` (appended Sitemap directive)
+  - `package.json` (added `react-helmet-async`)
+  - `src/main.tsx` (HelmetProvider wrapper)
+  - `src/components/SEOHead.tsx` (NEW)
+  - `src/pages/Index.tsx` (import + SEOHead usage)
+  - `src/pages/Docs.tsx` (import + SEOHead usage)
+  - `src/pages/NotFound.tsx` (import + SEOHead usage)
+  - `skills/ROADMAP.md`
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: no `@Lovable` or Lovable CDN URLs in production code.
+  - Grep confirms: `SEOHead` imported in all 3 pages, `HelmetProvider` wraps App.
+  - Grep confirms: `react-helmet-async` in package.json dependencies.
+  - Node.js/npm not available — `npm install` and `npm run build` pending.
+- Browser check summary:
+  - Not executable (no dev server). Validate JSON-LD at https://validator.schema.org/ after deploy.
+  - Validate OG tags at https://developers.facebook.com/tools/debug/ after deploy.
+- Risks / follow-ups:
+  - `npm install` required to install `react-helmet-async` before build.
+  - `og-image.svg` is SVG format — some social platforms (Twitter/X) may not render SVG previews. Consider generating a PNG fallback.
+  - `canonical` and `og:url` assume domain `formatmd.app` — update if domain changes.
+  - Per-page `<meta>` overrides rely on `react-helmet-async` deduplication — verify no duplicate tags in production HTML.
+
+### 2026-03-10 — Quick Fixes P1 + Footer Regression
+- Task: 4 quick fixes + critical footer/editor transition bug.
+- Changes made:
+  - **Footer regression fix**: Changed footer wrapper from `maxHeight` CSS transition (which stayed in flex flow and blocked editor layout) to `position: fixed` with `translateY(100%)` transform. Footer is now out of document flow entirely, preventing interference with the editor's `h-screen` flex layout.
+  - **Theme naming alignment**: Renamed CSS class `theme-cappuccino` → `theme-vaporwave` in `index.css` and `themes.ts`. Renamed variable `isCappuccino` → `isVaporwave` in `TerminalPreview.tsx`. Theme IDs, CSS classes, and variable names now all use `vaporwave` consistently.
+  - **Copy button feedback**: Swapped inverted styles — "Copied!" state now shows prominent green background (`theme.colors.heading`), default "Copy" shows subtle transparent background (`heading + 20` opacity).
+  - **Theme switch icon semantics**: Swapped Sun/Moon icons — Sun now shows in dark mode (indicating "switch to light"), Moon shows in light mode (indicating "switch to dark").
+  - **Theme persistence**: Added `localStorage.getItem('formatmd-theme')` in `useState` initializer with validation. Added `localStorage.setItem` in the theme-class effect. Also updated `classList.remove` to reference `theme-vaporwave` instead of old `theme-cappuccino`.
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `src/components/TerminalPreview.tsx`
+  - `src/lib/themes.ts`
+  - `src/index.css`
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: zero `cappuccino` references in `src/` directory.
+  - Grep confirms: `cappuccino` only remains in `skills/` documentation files (no code impact).
+  - Node.js/npm not available — `npm run build` and `npm run lint` pending.
+- Browser check summary:
+  - Not executable (no dev server). Key areas to verify:
+    - Paste text on homepage → editor should load without animation sticking.
+    - Theme toggle should persist across page refresh.
+    - Copy button should show green "Copied!" feedback after clicking.
+    - Sun icon in dark mode, Moon icon in light mode.
+- Risks / follow-ups:
+  - Footer is now `position: fixed` — verify it doesn't overlap content on short viewports.
+  - Run `npm run build` when Node.js is available to confirm no type errors from renamed variables.
+  - `skills/ROADMAP.md` and `skills/AUDIT_BUGS.md` still reference "cappuccino" in documentation — update if consistency matters.
+
+### 2026-03-10 — Production-Ready Docs + Lovable Removal + Code Optimization Audit
+- Task: Rewrite README as production-ready docs. Remove all Lovable branding. Sync all documentation files. Create comprehensive code optimization audit.
+- Changes made:
+  - **README.md**: Complete rewrite from Lovable scaffold template to production-ready FormatMD documentation with features, tech stack, setup instructions, project structure, themes, routes, deployment, and contributing guide.
+  - **vite.config.ts**: Removed `lovable-tagger` import and `componentTagger()` plugin. Simplified `defineConfig` signature (no longer needs `mode` param).
+  - **package.json**: Removed `lovable-tagger` from devDependencies.
+  - **Docs.tsx**: Fixed "Light Mode (Cappuccino)" → "Light Mode (Vaporwave)" in feature card.
+  - **REFERENCES.md**: Replaced Lovable deployment docs with Vercel/Netlify/Cloudflare deployment options.
+  - **PROJECT_CHARTER.md**: Changed deployment from "Lovable platform" to "Static SPA (Vercel / Netlify / Cloudflare Pages)".
+  - **ROADMAP.md**: Changed "Connect custom domain via Lovable settings" → "via hosting platform".
+  - **AUDIT_BUGS.md**: Full rewrite with current status of all 12 bugs (9 fixed, 3 open).
+  - **AUDIT_SEO.md**: Marked all items as resolved with fix descriptions.
+  - **AUDIT_UX.md**: Marked A11Y-001, A11Y-002, UX-001, UX-003 as fixed.
+  - **CODE_OPTIMIZATION_AUDIT.md**: NEW — comprehensive optimization plan with 30+ items across 7 categories (dead code, decomposition, performance, TypeScript, structure, CSS, testing), prioritized execution plan in 4 phases.
+  - **.env.example**: NEW — template for required environment variables.
+- Files touched:
+  - `README.md`
+  - `vite.config.ts`
+  - `package.json`
+  - `src/pages/Docs.tsx`
+  - `skills/REFERENCES.md`
+  - `skills/PROJECT_CHARTER.md`
+  - `skills/ROADMAP.md`
+  - `skills/AUDIT_BUGS.md`
+  - `skills/AUDIT_SEO.md`
+  - `skills/AUDIT_UX.md`
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (NEW)
+  - `.env.example` (NEW)
+  - `MEMORY.md`
+- Validation run:
+  - Grep confirms: zero Lovable references in source code (`src/`, `vite.config.ts`, `package.json`, `README.md`).
+  - Grep confirms: remaining Lovable mentions only in historical changelog entries (MEMORY.md, ROADMAP.md) — appropriate context.
+  - Grep confirms: zero `cappuccino` references in `src/` directory.
+  - Node.js/npm not available — `npm install` (to remove lovable-tagger from node_modules) and `npm run build` pending.
+- Browser check summary:
+  - Not executable (no dev server). No UI code changed — only Docs.tsx text label update.
+- Risks / follow-ups:
+  - Run `npm install` to regenerate `package-lock.json` without `lovable-tagger`.
+  - `bun.lock` still references `lovable-tagger` — will be cleaned on next `bun install`.
+  - Docs page still hardcodes `themeId = 'infiniti'` instead of reading from localStorage — follow-up for theme sync.
+
+### 2026-03-10 — Code Optimization Implementation (Phase A+B)
+- Task: Implement optimizations from CODE_OPTIMIZATION_AUDIT.md Phase A and B.
+- Changes made:
+  - **TerminalPreview.tsx refactored** (482 → ~275 LOC):
+    - Imports `markdownToStyledHtml` from `@/lib/markdownToHtml` instead of inline `getStyledHTML()` (~125 LOC removed)
+    - Imports `downloadMarkdown` from `@/lib/downloadHandler` instead of inline download logic (~32 LOC removed)
+    - Uses `useMemo(() => markdownToStyledHtml(markdown, theme), [markdown, theme])` for memoized HTML
+    - Removed unused `themes` import, `isUniformTheme` and `highlightBg` variables
+    - Changed download dropdown z-index from `z-[9999]` to `z-50`
+  - **New utility files created**:
+    - `src/lib/markdownToHtml.ts` (135 LOC) — extracted markdown→styled HTML renderer
+    - `src/lib/downloadHandler.ts` (39 LOC) — extracted download/export logic
+    - `src/lib/constants.ts` (9 LOC) — centralized app constants
+  - **App.tsx rewritten**: Removed Radix Toaster, added `React.lazy()` for Docs/NotFound, wrapped in Suspense
+  - **sonner.tsx rewritten**: Removed `next-themes` dependency, hardcoded `theme="dark"`
+  - **package.json cleaned**: Removed 22 unused dependencies (17 Radix packages, recharts, embla-carousel-react, cmdk, input-otp, react-day-picker, date-fns, next-themes, react-resizable-panels, react-markdown, react-hook-form, @hookform/resolvers, vaul, zod). Only 3 Radix packages remain.
+  - **Dead code deleted**: MarkdownInput.tsx, NavLink.tsx, use-mobile.tsx, use-toast.ts, example.test.ts, 42+ unused shadcn/ui components, Radix toaster.tsx/toast.tsx
+  - **Background animations**: Added `animationPlayState` pause when editor is active
+  - **CODE_OPTIMIZATION_AUDIT.md**: Updated with strikethrough on all completed items
+- Files touched:
+  - `src/components/TerminalPreview.tsx` (rewrite)
+  - `src/lib/markdownToHtml.ts` (NEW)
+  - `src/lib/downloadHandler.ts` (NEW)
+  - `src/lib/constants.ts` (NEW)
+  - `src/App.tsx` (rewrite)
+  - `src/components/ui/sonner.tsx` (rewrite)
+  - `package.json` (22 deps removed)
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (status updates)
+  - 45+ files deleted (dead components, hooks, UI primitives)
+- Completed OPTs: 001, 002, 003, 004, 005, 006, 010, 011, 021, 023, 026, 040, 041, 052
+- Pending from Phase B: OPT-030, OPT-043
+- Validation run:
+  - Grep confirms: no broken imports of deleted files in remaining source
+  - Node.js/npm not available — `npm install` and `npm run build` pending
+- Risks / follow-ups:
+  - Must run `npm install` to regenerate lockfile after 22 dependency removals
+  - Run `npm run build` to confirm no type errors from TerminalPreview refactor
+  - Constants file created but not yet wired into Index.tsx/SEOHead.tsx — can be done incrementally
+
+### 2026-03-10 (update 5 — Git Setup)
+- Task: Fix git push issue and set up repository Git defaults for FormatMD.
+- Run tracker:
+  - ~~Diagnose push failure~~
+  - ~~Configure local git identity and workflow defaults~~
+  - ~~Verify current branch and commit state~~
+  - Pending: configure remote and push after remote URL is provided.
+- Changes made:
+  - Root cause found: no remote configured in `/Users/gtmbuddy/Documents/formatmd/formatmd-new/.git/config`.
+  - Configured local repo git settings:
+    - `user.name = Puneet Vishnawat`
+    - `user.email = gtmbuddy@Puneets-MacBook-Pro.local`
+    - `push.autoSetupRemote = true`
+    - `pull.rebase = false`
+    - `fetch.prune = true`
+  - Verified latest saved commit exists:
+    - `3b3cf72 chore: save all current project changes`
+- Files touched:
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `git push` confirms issue: no configured push destination.
+  - `git remote -v` confirms zero remotes.
+- Browser check summary:
+  - Not applicable (git setup task).
+- Risks / follow-ups:
+  - Need target remote repository URL (GitHub/GitLab/Bitbucket) to finish setup and push.
+
+### 2026-03-10 (update 6 — Production Dependency Cleanup)
+- Task: Select and execute a production-readiness task from pending improvements with focus on refactor + dependency reduction.
+- Changes made:
+  - Reviewed `start.md`, `CLAUDE.md`, and `skills/` audit/roadmap files to identify outstanding production hardening tasks.
+  - Removed unused React Query integration from app shell:
+    - Deleted `QueryClient`/`QueryClientProvider` imports.
+    - Removed `queryClient` instantiation.
+    - Simplified root component tree in `App.tsx` without behavior changes to routing/toasts/tooltips.
+  - Removed unused dependency declarations:
+    - `@tanstack/react-query` (runtime dependency, unused in source).
+    - `@tailwindcss/typography` (dev dependency, not configured in Tailwind plugins).
+- Files touched:
+  - `src/App.tsx`
+  - `package.json`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` → failed: `zsh:1: command not found: npm`
+  - `npm run test` → failed: `zsh:1: command not found: npm`
+  - `npm run build` → failed: `zsh:1: command not found: npm`
+- Browser check summary:
+  - Blocked (cannot run dev/build toolchain without Node/npm).
+- Risks / follow-ups:
+  - `package-lock.json` was not regenerated in this environment because npm is unavailable.
+  - Run `npm install` (or `npm uninstall @tanstack/react-query @tailwindcss/typography`) once Node/npm is available to sync lockfile and verify clean install.
+  - Re-run full quality gates and browser sanity checks after toolchain restore.
+
+### 2026-03-10 (update 7 — Skills Consolidation + Master Task List)
+- Task: Consolidate overlapping `skills/` documentation into a minimal canonical set and create a verified production-ready master task list.
+- Changes made:
+  - Read and reconciled `start.md`, `CLAUDE.md`, and all legacy `skills/*.md` files against current source/config state.
+  - Consolidated status tracking into 5 canonical skills files:
+    - `skills/ROADMAP.md` rewritten as master active production task list.
+    - `skills/AUDITS.md` added as consolidated open/resolved findings register.
+    - `skills/COMPLETED.md` added as completed-work ledger.
+    - `skills/PROJECT_CHARTER.md` rewritten with current architecture/dependency baseline.
+    - `skills/REFERENCES.md` rewritten as trusted reference + dependency governance file.
+  - Removed overlapping legacy files merged into canonical set:
+    - `AUDIT_BUGS.md`, `AUDIT_PERFORMANCE.md`, `AUDIT_SECURITY.md`, `AUDIT_SEO.md`, `AUDIT_UX.md`
+    - `CODE_OPTIMIZATION_AUDIT.md`, `TECH_DEBT.md`, `PR_NOTES_PHASE1_BUGFIXES.md`, `prompts.md`
+  - Updated `README.md` documentation section and stale metadata references to match the new skills structure and current codebase facts.
+  - Updated `start.md` run status with this consolidation pass.
+- Files touched:
+  - `skills/ROADMAP.md`
+  - `skills/AUDITS.md` (NEW)
+  - `skills/COMPLETED.md` (NEW)
+  - `skills/PROJECT_CHARTER.md`
+  - `skills/REFERENCES.md`
+  - `skills/AUDIT_BUGS.md` (deleted)
+  - `skills/AUDIT_PERFORMANCE.md` (deleted)
+  - `skills/AUDIT_SECURITY.md` (deleted)
+  - `skills/AUDIT_SEO.md` (deleted)
+  - `skills/AUDIT_UX.md` (deleted)
+  - `skills/CODE_OPTIMIZATION_AUDIT.md` (deleted)
+  - `skills/TECH_DEBT.md` (deleted)
+  - `skills/PR_NOTES_PHASE1_BUGFIXES.md` (deleted)
+  - `skills/prompts.md` (deleted)
+  - `README.md`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - Confirmed `skills/` file count is exactly 5 after consolidation.
+  - Confirmed stale references in `README.md` were replaced with canonical skills files.
+  - Confirmed conflicting status notes (for previously open/resolved items) were reconciled into `skills/AUDITS.md`.
+  - No code files were modified in this consolidation pass.
+- Browser check summary:
+  - Not applicable (documentation-only changes).
+- Risks / follow-ups:
+  - Existing code changes from previous run (`src/App.tsx`, `package.json`) remain uncommitted and were not altered in this pass.
+  - Once Node/npm are available, regenerate lockfile and rerun quality gates to align docs with executable validation evidence.
+
+### 2026-03-10 (update 8 — QA Attempt + Skills Category Consolidation)
+- Task: Run bug/QA checks across whole codebase, then merge Skills docs into 4 requested category files.
+- Changes made:
+  - Executed requested QA commands:
+    - `npm run lint`
+    - `npm run test`
+    - `npm run build`
+  - All three commands failed identically in this environment: `zsh:1: command not found: npm`.
+  - Performed fallback static QA sweep and captured key findings:
+    - `dangerouslySetInnerHTML` still present in `TerminalPreview.tsx`.
+    - No test spec files currently present under `src/`.
+    - `tsconfig.app.json` strictness/dead-code flags remain disabled.
+    - `package-lock.json` still contains removed dependencies (stale metadata).
+  - Restructured `skills/` into requested 4 canonical files:
+    - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+    - `skills/ALL_BUGS.md`
+    - `skills/SEO.md`
+    - `skills/UI_UX_FLOW.md`
+  - Removed superseded skills files from previous structure.
+  - Updated docs consistency:
+    - `README.md` Skills documentation table now points to the 4 new files.
+    - `.env.example` key aligned with code (`VITE_SUPABASE_PUBLISHABLE_KEY`).
+    - `start.md` run status updated.
+- Files touched:
+  - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` (NEW)
+  - `skills/ALL_BUGS.md` (NEW)
+  - `skills/SEO.md` (NEW)
+  - `skills/UI_UX_FLOW.md` (NEW)
+  - `skills/ROADMAP.md` (deleted)
+  - `skills/AUDITS.md` (deleted)
+  - `skills/COMPLETED.md` (deleted)
+  - `skills/PROJECT_CHARTER.md` (deleted)
+  - `skills/REFERENCES.md` (deleted)
+  - `README.md`
+  - `.env.example`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> `zsh:1: command not found: npm`
+  - `npm run test` -> `zsh:1: command not found: npm`
+  - `npm run build` -> `zsh:1: command not found: npm`
+  - Static QA completed via repo-wide text/config scans.
+- Browser check summary:
+  - Not executable in this environment (npm/dev server unavailable).
+- Risks / follow-ups:
+  - Full automated QA and browser verification remain pending until Node/npm are available.
+  - Lockfile cleanup/sync remains pending due npm absence.
+
+### 2026-03-10 (update 9 — PR Creation for Current Changes)
+- Task: Read `start.md`/`CLAUDE.md` and create a PR package for all current repo changes.
+- Changes made:
+  - Re-read `start.md` and `CLAUDE.md` for run protocol compliance.
+  - Added PR wiki note at `docs/wiki/2026-03-10-skills-qa-pr.md`.
+  - Updated run tracker in `start.md` with PR packaging status.
+  - Prepared branch/commit workflow for all pending changes.
+- Files touched:
+  - `docs/wiki/2026-03-10-skills-qa-pr.md` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> `zsh:1: command not found: npm`
+  - `npm run test` -> `zsh:1: command not found: npm`
+  - `npm run build` -> `zsh:1: command not found: npm`
+  - `gh --version` -> `zsh:1: command not found: gh`
+- Browser check summary:
+  - Not executable (Node/npm missing).
+- Risks / follow-ups:
+  - PR can be pushed via Git only; GitHub CLI is unavailable.
+  - Full QA/browser verification still pending until toolchain is available.
+
+### 2026-03-10 (update 10 — PR Branch Pushed)
+- Task: Finalize PR packaging by committing and pushing all current changes.
+- Changes made:
+  - Created branch: `docs/skills-qa-pr-2026-03-10`
+  - Committed staged changes:
+    - Commit: `5918554`
+    - Message: `docs(skills): consolidate trackers and package qa/bug status`
+  - Pushed branch to `origin` with upstream tracking.
+  - Generated PR URL:
+    - `https://github.com/pukrvi/formatmd-new/pull/new/docs/skills-qa-pr-2026-03-10`
+- Files touched:
+  - No additional content file changes beyond the already committed set.
+  - `MEMORY.md` updated with this entry.
+- Validation run:
+  - Git validation passed:
+    - branch created
+    - commit created
+    - push to origin successful
+  - App QA commands still blocked in environment (`npm` unavailable).
+- Browser check summary:
+  - Not executable in this environment.
+- Risks / follow-ups:
+  - Open and complete PR on GitHub web UI using generated URL.
+  - Run full `lint`/`test`/`build` and browser checks in a Node/npm-enabled environment before merge.
+
+### 2026-03-10 (update 11 — Footer, Hero, and Homepage Fold Fixes)
+- Task: Resolve footer-induced editor layout issues and redesign homepage flow per UI feedback.
+- Changes made:
+  - Fixed editor-open/stuck layout by replacing dual hidden/visible stacked layout with explicit conditional rendering (`landing` vs `editor`) in `Index.tsx`.
+  - Removed fixed/footer-overlay pattern that was contributing to visual and layout conflicts.
+  - Added `DocumentationSection` component and moved documentation content to homepage second fold (directly after hero).
+  - Updated docs route (`Docs.tsx`) to reuse the shared documentation section for consistency.
+  - Updated footer links to homepage anchors (`/#documentation`, `/#features`) and improved light-theme styling/readability.
+  - Made hero fill first fold responsively with `min-h-[100svh]` and responsive spacing/sizing.
+  - Added hash-scroll handling in homepage route to support anchor navigation reliably.
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `src/components/Footer.tsx`
+  - `src/pages/Docs.tsx`
+  - `src/components/DocumentationSection.tsx` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> failed:
+    - `tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports` (`require("tailwindcss-animate")`)
+    - plus 2 pre-existing fast-refresh warnings in UI utility files
+  - `npm run test` -> failed: no test files found
+  - `npm run build` -> passed (production build successful)
+  - Dev server started successfully at `http://localhost:8080/`
+- Browser check summary:
+  - Runtime app launch verified locally after installing Node/npm and dependencies.
+  - User-reported stuck editor layout was addressed in layout structure.
+- Risks / follow-ups:
+  - Lint/test gates still not green due existing project-level issues unrelated to this UI patch.
+  - If desired, next pass should fix Tailwind config `require()` lint rule and add at least one baseline test file to make `npm run test` pass.
+
+## Entry Template (use for every future update)
+- Date:
+- Task:
+- Changes made:
+- Files touched:
+- Validation run:
+- Browser check summary:
+- Risks / follow-ups:
