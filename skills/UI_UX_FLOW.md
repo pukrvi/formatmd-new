@@ -46,4 +46,6 @@
 - Shared paste flow implemented for landing/editor paths.
 - Footer/docs navigation path corrected.
 - Copy feedback and theme icon semantics corrected.
-
+- Hero now fills first fold responsively (`100svh`) with device-aware spacing.
+- Documentation content is available as homepage second fold directly after hero.
+- Footer styling updated to properly support light theme visuals and readability.

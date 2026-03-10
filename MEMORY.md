@@ -507,6 +507,63 @@ Update this file after every completed process/task run.
   - Open and complete PR on GitHub web UI using generated URL.
   - Run full `lint`/`test`/`build` and browser checks in a Node/npm-enabled environment before merge.
 
+### 2026-03-10 (update 11 — Footer, Hero, and Homepage Fold Fixes)
+- Task: Resolve footer-induced editor layout issues and redesign homepage flow per UI feedback.
+- Changes made:
+  - Fixed editor-open/stuck layout by replacing dual hidden/visible stacked layout with explicit conditional rendering (`landing` vs `editor`) in `Index.tsx`.
+  - Removed fixed/footer-overlay pattern that was contributing to visual and layout conflicts.
+  - Added `DocumentationSection` component and moved documentation content to homepage second fold (directly after hero).
+  - Updated docs route (`Docs.tsx`) to reuse the shared documentation section for consistency.
+  - Updated footer links to homepage anchors (`/#documentation`, `/#features`) and improved light-theme styling/readability.
+  - Made hero fill first fold responsively with `min-h-[100svh]` and responsive spacing/sizing.
+  - Added hash-scroll handling in homepage route to support anchor navigation reliably.
+- Files touched:
+  - `src/pages/Index.tsx`
+  - `src/components/Footer.tsx`
+  - `src/pages/Docs.tsx`
+  - `src/components/DocumentationSection.tsx` (NEW)
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> failed:
+    - `tailwind.config.ts:103:13` `@typescript-eslint/no-require-imports` (`require("tailwindcss-animate")`)
+    - plus 2 pre-existing fast-refresh warnings in UI utility files
+  - `npm run test` -> failed: no test files found
+  - `npm run build` -> passed (production build successful)
+  - Dev server started successfully at `http://localhost:8080/`
+- Browser check summary:
+  - Runtime app launch verified locally after installing Node/npm and dependencies.
+  - User-reported stuck editor layout was addressed in layout structure.
+- Risks / follow-ups:
+  - Lint/test gates still not green due existing project-level issues unrelated to this UI patch.
+  - If desired, next pass should fix Tailwind config `require()` lint rule and add at least one baseline test file to make `npm run test` pass.
+
+### 2026-03-10 (update 12 — PR Publish Packaging + Tracker Accuracy)
+- Task: Prepare and publish a new PR with all current UI and documentation updates, while ensuring memory/skills logs are accurate.
+- Changes made:
+  - Migrated work into GitHub-tracked repo clone (`/Users/gtmbuddy/Documents/formatmd-pr-work`) for reliable PR publishing.
+  - Revalidated QA commands in this environment:
+    - `npm install` succeeded.
+    - `npm run lint` failed on existing `tailwind.config.ts` `require()` rule violation.
+    - `npm run test` failed because no test files exist.
+    - `npm run build` passed.
+  - Updated `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` QA status to reflect actual command outputs (removed stale `npm not found` blocker note).
+  - Updated `start.md` with this PR publish run status.
+- Files touched:
+  - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm install` -> passed
+  - `npm run lint` -> failed (`@typescript-eslint/no-require-imports` in `tailwind.config.ts`)
+  - `npm run test` -> failed (`No test files found`)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Existing local runtime validation already performed in prior run (`http://localhost:8080/`).
+- Risks / follow-ups:
+  - PR will include known pre-existing lint/test blockers; merge should be conditional on policy for these gates.
+  - Add at least one baseline test file and resolve Tailwind config import style to get QA fully green.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

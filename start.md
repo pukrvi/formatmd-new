@@ -109,3 +109,19 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 - ~~Read `start.md` and `CLAUDE.md`~~
 - ~~Prepare branch + PR-ready commit for all current changes~~
 - `gh` CLI unavailable in environment; PR creation must be completed via GitHub web URL after push.
+
+## Current Run Status (2026-03-10 — Footer + Fold Fixes)
+- ~~Fix editor opening/stuck layout after paste~~
+- ~~Make footer light-theme compatible~~
+- ~~Move documentation into second fold on homepage~~
+- ~~Make hero fill first fold responsively across devices~~
+- Validation:
+  - `npm run build` passed
+  - `npm run lint` failed due existing config rule (`no-require-imports` in `tailwind.config.ts`)
+  - `npm run test` failed because no test files exist
+
+## Current Run Status (2026-03-10 — PR Publish Run)
+- ~~Run QA gate in GitHub-backed repo clone~~
+- ~~Update `skills/` canonical tracker with current QA outputs~~
+- ~~Package current homepage/footer/docs changes for PR~~
+- Pending external action: open and merge PR via GitHub web URL (no `gh` CLI in environment).
