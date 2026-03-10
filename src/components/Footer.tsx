@@ -54,7 +54,7 @@ const Footer = ({ themeId = 'infiniti', onFeedbackClick }: FooterProps) => {
             onMouseEnter={(e) => (e.currentTarget.style.color = theme.colors.heading)}
             onMouseLeave={(e) => (e.currentTarget.style.color = theme.colors.text + '78')}
           >
-            Docs
+            Documentation
           </Link>
           <button
             type="button"
