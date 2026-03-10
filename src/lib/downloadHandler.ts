@@ -15,12 +15,14 @@ function downloadBlob(blob: Blob, filename: string) {
  */
 export function downloadMarkdown(
   markdown: string,
-  format: 'md' | 'txt' | 'html' | 'pdf',
+  format: 'md' | 'skill-md' | 'txt' | 'html' | 'pdf',
   styledHtml: string
 ) {
   if (format === 'md') {
-    const yamlWrapped = `---\n${markdown}\n---\n`;
-    downloadBlob(new Blob([yamlWrapped], { type: 'text/markdown' }), 'output.md');
+    downloadBlob(new Blob([markdown], { type: 'text/markdown' }), 'output.md');
+  } else if (format === 'skill-md') {
+    const skillMarkdown = `---\n${markdown}\n---\n`;
+    downloadBlob(new Blob([skillMarkdown], { type: 'text/markdown' }), 'skill.md');
   } else if (format === 'txt') {
     downloadBlob(new Blob([markdown], { type: 'text/plain' }), 'output.txt');
   } else if (format === 'html') {

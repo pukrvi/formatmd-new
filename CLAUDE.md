@@ -38,17 +38,17 @@ If instructions conflict, follow the highest level and state the tradeoff clearl
 - In shared/public contexts, do not disclose durable/private memory content.
 
 ## Scope Guardrails
-- Only change files in `/Users/gtmbuddy/Documents/formatmd/formatmd-new/`.
+- Only change files in `/Users/gtmbuddy/Documents/formatmd/`.
 - Keep task scope tight; avoid unrelated refactors.
 - Do not edit generated artifacts directly unless regeneration is part of the request.
 - Example generated file: `src/integrations/supabase/client.ts`.
 
 ## Architecture (WHAT)
 - `src/pages`: route-level pages (`/`, `/docs`, `*`).
-- `src/components`: feature UI (terminal preview, toolbar, footer, feedback modal).
+- `src/components`: feature UI (TerminalPreview, MarkdownToolbar, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows).
 - `src/components/ui`: shared shadcn/ui primitives.
-- `src/lib`: utilities (`themes`, `htmlToMarkdown`, helpers).
-- `src/hooks`: shared hooks (`useMarkdownPaste`, etc.).
+- `src/lib`: utilities (`themes`, `htmlToMarkdown`, `markdownToHtml`, `downloadHandler`, `constants`, `utils`).
+- `src/hooks`: shared hooks (`useMarkdownPaste`).
 - `src/integrations/supabase`: Supabase client + generated types.
 
 ## Architecture Intent (WHY)

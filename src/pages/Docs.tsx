@@ -57,7 +57,7 @@ const Docs = () => {
       </header>
 
       <DocumentationSection theme={theme} />
-      <Footer themeId={themeId} />
+      <Footer themeId={themeId} onFeedbackClick={() => setFeedbackOpen(true)} />
       <FeedbackModal open={feedbackOpen} onOpenChange={setFeedbackOpen} themeId={themeId} />
     </div>
   );

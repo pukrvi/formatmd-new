@@ -3,29 +3,12 @@ import { getTheme, ThemeId } from '@/lib/themes';
 
 interface FooterProps {
   themeId?: ThemeId;
+  onFeedbackClick?: () => void;
 }
 
-const Footer = ({ themeId = 'infiniti' }: FooterProps) => {
+const Footer = ({ themeId = 'infiniti', onFeedbackClick }: FooterProps) => {
   const theme = getTheme(themeId);
   const isLightTheme = theme.id === 'vaporwave';
-
-  const links = [
-    { label: 'Home', to: '/' },
-    { label: 'Documentation', to: '/#documentation' },
-    { label: 'Features', to: '/#features' },
-  ];
-
-  // Handle hash navigation for links with anchors
-  const handleClick = (to: string) => {
-    if (to.includes('#')) {
-      const hash = to.split('#')[1];
-      // If we're already on the target page, scroll to the section
-      const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
 
   return (
     <footer
@@ -41,25 +24,49 @@ const Footer = ({ themeId = 'infiniti' }: FooterProps) => {
           <span className="font-mono text-sm font-bold" style={{ color: theme.colors.heading }}>
             FormatMD
           </span>
-          <span className="text-xs font-mono" style={{ color: theme.colors.text + '70' }}>
+          <a
+            href="https://infinitigrid.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-mono transition-colors duration-200 hover:underline"
+            style={{ color: theme.colors.text + '70' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = theme.colors.heading)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = theme.colors.text + '70')}
+          >
             — by Puneet Vishnawat @ InfinitiGRID
-          </span>
+          </a>
         </div>
 
         <nav className="flex flex-wrap items-center justify-center gap-4">
-          {links.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={() => handleClick(link.to)}
-              className="text-xs font-mono transition-colors duration-200 hover:underline"
-              style={{ color: theme.colors.text + '78' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = theme.colors.heading)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = theme.colors.text + '78')}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link
+            to="/"
+            className="text-xs font-mono transition-colors duration-200 hover:underline"
+            style={{ color: theme.colors.text + '78' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = theme.colors.heading)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = theme.colors.text + '78')}
+          >
+            Home
+          </Link>
+          <button
+            type="button"
+            onClick={onFeedbackClick}
+            className="px-2.5 py-1 rounded-md text-xs font-mono transition-colors duration-200 border"
+            style={{
+              color: theme.colors.text + '82',
+              borderColor: `${theme.colors.heading}30`,
+              backgroundColor: `${theme.colors.heading}12`,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = theme.colors.heading;
+              e.currentTarget.style.borderColor = `${theme.colors.heading}55`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.colors.text + '82';
+              e.currentTarget.style.borderColor = `${theme.colors.heading}30`;
+            }}
+          >
+            Feedback
+          </button>
         </nav>
       </div>
     </footer>

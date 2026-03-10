@@ -19,7 +19,7 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 
 ## Hard Scope Guardrail
 - Only edit inside:
-  - `/Users/gtmbuddy/Documents/formatmd/formatmd-new/`
+  - `/Users/gtmbuddy/Documents/formatmd/`
 
 ## Product + Brand Baseline
 - Product name: `FormatMD`.
@@ -71,51 +71,13 @@ Fast runbook for how the bot should operate on every run in FormatMD.
 3. Update `MEMORY.md`.
 4. Summarize exactly what changed and what remains.
 
-## Current Run Status (2026-03-10)
-- ~~Read `start.md` and `CLAUDE.md`~~
-- ~~Use skills flow to discover relevant audit capabilities~~
-- ~~Run static bug/performance/code-quality audit~~
-- ~~Implement production hardening changes in `formatmd-new`~~
-- ~~Update run tracker and memory log~~
-- Automated validation (`lint`/`test`/`build`) blocked: Node/npm not installed in this environment.
-
-## Current Run Status (2026-03-10 — Git Setup)
-- ~~Diagnose Git push issue~~
-- ~~Configure local Git identity and defaults in `formatmd-new`~~
-- ~~Confirm commit history and clean working tree~~
-- Pending: add remote `origin` and push once target remote URL is provided.
-
-## Current Run Status (2026-03-10 — Prod Readiness Dependency Pass)
-- ~~Read `start.md` and `CLAUDE.md`~~
-- ~~Review `skills/` pending improvements and pick one deployment-focused task~~
-- ~~Remove unused runtime/provider code (`@tanstack/react-query`)~~
-- ~~Remove unused dependency declarations from `package.json`~~
-- Validation blocked: `npm` is unavailable in this environment (`command not found`).
-
-## Current Run Status (2026-03-10 — Skills Consolidation)
-- ~~Read `start.md`, `CLAUDE.md`, and all `skills/` files~~
-- ~~Resolve conflicting status notes against current codebase~~
-- ~~Consolidate overlapping skills docs into canonical set~~
-- ~~Create master production task list and completed ledger~~
-- `skills/` now reduced to 5 canonical files.
-
-## Current Run Status (2026-03-10 — QA Pass + Skills Category Merge)
-- ~~Attempt full QA commands across codebase (`lint`/`test`/`build`)~~
-- QA blocked: `npm` unavailable (`command not found`).
-- ~~Run static bug/QA checks (security hotspots, stale lockfile deps, test coverage presence)~~
-- ~~Re-merge `skills/` into requested 4 category files~~
-
-## Current Run Status (2026-03-10 — PR Packaging)
-- ~~Read `start.md` and `CLAUDE.md`~~
-- ~~Prepare branch + PR-ready commit for all current changes~~
-- `gh` CLI unavailable in environment; PR creation must be completed via GitHub web URL after push.
-
-## Current Run Status (2026-03-10 — Footer + Fold Fixes)
-- ~~Fix editor opening/stuck layout after paste~~
-- ~~Make footer light-theme compatible~~
-- ~~Move documentation into second fold on homepage~~
-- ~~Make hero fill first fold responsively across devices~~
-- Validation:
-  - `npm run build` passed
-  - `npm run lint` failed due existing config rule (`no-require-imports` in `tailwind.config.ts`)
-  - `npm run test` failed because no test files exist
+## Completed Work (2026-03-10)
+All prior runs on 2026-03-10 are complete. Summary of completed passes:
+- Production hardening, code optimization, 22 unused dependencies removed
+- Git setup and remote configuration
+- Skills docs consolidated into 4 canonical files
+- Footer/layout fixes, features fold, theme animation restore
+- Feedback modal redesigned to single request form with email
+- Clean `.md` + `skill.MD` export split
+- Lint blocker fixed, baseline test added
+- Latest validation: `npm run lint` passed (2 warnings), `npm run test` passed (3 tests), `npm run build` passed
