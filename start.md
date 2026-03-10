@@ -153,3 +153,13 @@ Fast runbook for how the bot should operate on every run in FormatMD.
   - `npm run lint` passed with 2 non-blocking warnings in UI primitive files
   - `npm run test` passed (`src/lib/themes.test.ts`, 3 tests)
   - `npm run build` passed
+
+## Current Run Status (2026-03-10 — Clean Markdown Export + skill.MD Option)
+- ~~Remove automatic `---` wrapping from default `.md` downloads~~
+- ~~Add new `skill.MD` download option that wraps content with `---` delimiters~~
+- ~~Keep copy/default export behavior as clean markdown~~
+- ~~Update feature docs copy for new download behavior~~
+- Validation:
+  - `npm run lint` passed with 2 non-blocking warnings in UI primitive files
+  - `npm run test` passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` passed

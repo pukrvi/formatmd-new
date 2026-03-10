@@ -635,6 +635,34 @@ Update this file after every completed process/task run.
   - Supabase migration must be applied before using the new email field in production.
   - If migration is skipped, feedback submission will fail due missing `email` column or unsupported `request` type.
 
+### 2026-03-10 (update 15 — Markdown Export Behavior Split: Clean vs skill.MD)
+- Task: Remove default delimiter wrapping from normal markdown export and add explicit `skill.MD` format for wrapped output.
+- Changes made:
+  - Updated download export logic:
+    - `.md` now downloads clean markdown exactly as shown in editor/preview.
+    - Added `skill.MD` format that downloads markdown wrapped with:
+      - `---`
+      - content
+      - `---`
+  - Updated download dropdown UI to include `skill.MD` option.
+  - Updated features/documentation copy to describe clean `.md` vs `skill.MD` behavior.
+  - Copy pipeline remains clean markdown by default (no automatic wrapper insertion).
+- Files touched:
+  - `src/lib/downloadHandler.ts`
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/DocumentationSection.tsx`
+  - `start.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed with 2 warnings (`react-refresh/only-export-components` in UI primitive files)
+  - `npm run test` -> passed (`src/lib/themes.test.ts`, 3 tests)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Build-level verification completed; manual download/copy click-through should verify expected file payloads in browser.
+- Risks / follow-ups:
+  - `skill.MD` currently downloads as filename `skill.md`; rename is easy if a different naming pattern is required.
+  - Existing chunk-size warning (>500 kB) remains unrelated to this change.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

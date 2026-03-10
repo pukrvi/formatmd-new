@@ -152,7 +152,7 @@ const DocumentationSection = ({ theme }: DocumentationSectionProps) => {
         {
           icon: <Download className="w-4 h-4" style={{ color: c.heading }} />,
           title: 'Download Formats',
-          description: 'Export as `.md`, `.txt`, `.html`, or print-to-PDF.',
+          description: 'Export as clean `.md`, `skill.MD` (--- wrapped), `.txt`, `.html`, or print-to-PDF.',
         },
       ],
     },

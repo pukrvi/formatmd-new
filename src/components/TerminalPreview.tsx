@@ -72,7 +72,7 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
       getStyledHTML: () => styledHtml,
     }));
 
-    const handleDownload = (format: 'md' | 'txt' | 'html' | 'pdf') => {
+    const handleDownload = (format: 'md' | 'skill-md' | 'txt' | 'html' | 'pdf') => {
       setIsDownloadOpen(false);
       downloadMarkdown(markdown, format, styledHtml);
     };
@@ -240,6 +240,7 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
                   >
                     {[
                       { format: 'md' as const, icon: <FileText className="w-3 h-3" />, label: '.md' },
+                      { format: 'skill-md' as const, icon: <FileText className="w-3 h-3" />, label: 'skill.MD' },
                       { format: 'txt' as const, icon: <FileText className="w-3 h-3" />, label: '.txt' },
                       { format: 'html' as const, icon: <FileCode className="w-3 h-3" />, label: '.html' },
                       { format: 'pdf' as const, icon: <FileDown className="w-3 h-3" />, label: 'PDF' },
