@@ -1,9 +1,10 @@
 import { Theme, ThemeId } from '@/lib/themes';
 import { useRef, forwardRef, useImperativeHandle, useState, useCallback, useId, useMemo } from 'react';
-import { Copy, Check, ChevronDown, Download, Eye, Pencil, Columns2, Clock, Type, Hash, FileText, FileCode, FileDown, Sun, Moon } from 'lucide-react';
+import { Copy, Check, ChevronDown, Download, Eye, Pencil, Columns2, Clock, Type, Hash, Sun, Moon } from 'lucide-react';
 import { useMarkdownPaste } from '@/hooks/useMarkdownPaste';
 import { markdownToStyledHtml } from '@/lib/markdownToHtml';
-import { downloadMarkdown } from '@/lib/downloadHandler';
+import { exportFormats, exportAs, ExportFormatId } from '@/lib/exportService';
+import { calculateStats } from '@/lib/markdownStats';
 import MarkdownToolbar from './MarkdownToolbar';
 
 type ViewMode = 'editor' | 'split' | 'preview';
@@ -57,13 +58,10 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
     const selectionBg = isVaporwave ? '#FFE0B280' : `${theme.colors.heading}40`;
     const selectionColor = theme.colors.text;
 
-    // Stats
-    const wordCount = useMemo(() => {
-      const words = markdown.trim().split(/\s+/).filter(Boolean);
-      return words.length;
-    }, [markdown]);
-    const charCount = markdown.length;
-    const readTime = useMemo(() => Math.max(1, Math.ceil(wordCount / 200)), [wordCount]);
+    const { wordCount, charCount, readTime } = useMemo(
+      () => calculateStats(markdown),
+      [markdown]
+    );
 
     // Memoized HTML render — only recalculates when markdown or theme changes
     const styledHtml = useMemo(() => markdownToStyledHtml(markdown, theme), [markdown, theme]);
@@ -72,9 +70,9 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
       getStyledHTML: () => styledHtml,
     }));
 
-    const handleDownload = (format: 'md' | 'skill-md' | 'txt' | 'html' | 'pdf') => {
+    const handleDownload = (format: ExportFormatId) => {
       setIsDownloadOpen(false);
-      downloadMarkdown(markdown, format, styledHtml);
+      exportAs(format, markdown, styledHtml);
     };
 
     const showEditor = viewMode === 'editor' || viewMode === 'split';
@@ -238,21 +236,15 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
                     className="absolute top-full right-0 mt-0.5 rounded-lg overflow-hidden z-50 animate-scale-in min-w-[120px] shadow-lg"
                     style={{ backgroundColor: theme.colors.panel, border: `1px solid ${theme.colors.heading}30` }}
                   >
-                    {[
-                      { format: 'md' as const, icon: <FileText className="w-3 h-3" />, label: '.md' },
-                      { format: 'skill-md' as const, icon: <FileText className="w-3 h-3" />, label: 'skill.MD' },
-                      { format: 'txt' as const, icon: <FileText className="w-3 h-3" />, label: '.txt' },
-                      { format: 'html' as const, icon: <FileCode className="w-3 h-3" />, label: '.html' },
-                      { format: 'pdf' as const, icon: <FileDown className="w-3 h-3" />, label: 'PDF' },
-                    ].map((d) => (
+                    {exportFormats.map((f) => (
                       <button
-                        key={d.format}
-                        onClick={() => handleDownload(d.format)}
+                        key={f.id}
+                        onClick={() => handleDownload(f.id)}
                         className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-medium transition-all hover:bg-white/5"
                         style={{ color: theme.colors.text }}
                       >
-                        {d.icon}
-                        <span>{d.label}</span>
+                        {f.icon}
+                        <span>{f.label}</span>
                       </button>
                     ))}
                   </div>

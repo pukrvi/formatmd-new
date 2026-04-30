@@ -753,6 +753,37 @@ Update this file after every completed process/task run.
   - `MEMORY.md`
 - Validation run: lint passed (0 errors, 2 non-blocking warnings), test passed (3/3), build passed.
 
+### 2026-04-30 — Architecture deepening: services + theme hook
+- Task: Apply the improve-codebase-architecture skill. Identified five deepening opportunities and implemented four; deliberately skipped the fifth after applying the deletion test (`useMarkdownPaste` concentrates real complexity, not a hollow wrapper).
+- Changes made:
+  - Theme persistence consolidated into `src/hooks/useTheme.ts` (localStorage read on init + write on change, returns `{ themeId, theme, setThemeId }`). Replaced scattered state + effect in `Index.tsx`.
+  - Clipboard logic extracted to `src/lib/clipboardService.ts` with `copyMarkdown(md, html)` returning `'rich' | 'plain'`. Removes inline `Blob`/`ClipboardItem`/`navigator.clipboard` wrangling from `Index.tsx`.
+  - Export formats consolidated into `src/lib/exportService.tsx` — single registry powers both the dropdown menu and `exportAs(id, md, html)` dispatch. PDF still opens a print window; download formats yield Blobs. Replaces and deletes `src/lib/downloadHandler.ts`.
+  - Stats computation extracted to `src/lib/markdownStats.ts` with named `WORDS_PER_MINUTE = 200`.
+  - Google Docs–specific heuristics in `htmlToMarkdown.ts` lifted into a named `normalizeRichTextDom()` pre-pass; `convertNode` now handles only semantic tags.
+  - Bundled (pre-existing in working tree) AnimatedPlaceholder ref API: `forwardRef` + `useImperativeHandle` exposing `stop()`. `Index.tsx` calls `placeholderRef.current?.stop()` on first user interaction or scroll past hero.
+  - Skipped: unifying the markdown converter import surface (only one caller per direction — would be shallow indirection) and folding `useMarkdownPaste` (deletion test showed it concentrates paste-detection complexity).
+- Files touched:
+  - `src/hooks/useTheme.ts` (NEW)
+  - `src/lib/clipboardService.ts` (NEW) + `clipboardService.test.ts` (NEW)
+  - `src/lib/exportService.tsx` (NEW) + `exportService.test.ts` (NEW)
+  - `src/lib/markdownStats.ts` (NEW) + `markdownStats.test.ts` (NEW)
+  - `src/lib/htmlToMarkdown.ts` (extract `normalizeRichTextDom`) + `htmlToMarkdown.test.ts` (NEW)
+  - `src/lib/downloadHandler.ts` (DELETED)
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/AnimatedPlaceholder.tsx`
+  - `src/pages/Index.tsx`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed (0 errors, 2 pre-existing fast-refresh warnings in `src/components/ui/`)
+  - `npm run test` -> passed (34/34, 31 new across 4 new test files)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Dev server running at `http://localhost:8080/`. Manual click-through of paste-from-Google-Docs, copy, and each export format not exercised in this session.
+- Risks / follow-ups:
+  - `src/lib/markdownToHtml.ts` still bakes inline theme styles directly into output HTML — couples conversion to presentation. Decoupling is a larger rewrite, deferred.
+  - Repo has no `.gitignore`; `dist/`, `.DS_Store`, and `.claude/*` are tracked historically. Worth introducing a `.gitignore` in a separate pass.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:
