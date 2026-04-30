@@ -4,7 +4,7 @@
 Persistent project memory log for FormatMD.  
 Update this file after every completed process/task run.
 
-## Current Product Snapshot (as of 2026-03-09)
+## Current Product Snapshot (as of 2026-03-10)
 
 ### Product
 - FormatMD is a markdown formatting workspace that converts raw markdown into styled rich output for copy/paste and export.
@@ -19,7 +19,7 @@ Update this file after every completed process/task run.
 - User formats with toolbar actions (headings, emphasis, code, lists, links, quotes, delimiters, etc.).
 - User switches view mode (`Editor`, `Split`, `Preview`) and theme (`infiniti`, `vaporwave`).
 - User copies styled output as rich HTML + plain text fallback.
-- User downloads output as `.md`, `.txt`, `.html`, or print-to-PDF.
+- User downloads output as clean `.md`, `skill.MD` (--- wrapped), `.txt`, `.html`, or print-to-PDF.
 
 ### Current Feature Set
 - Live markdown editor with undo/redo handling.
@@ -28,10 +28,12 @@ Update this file after every completed process/task run.
 - Stats bar with word count, character count, and estimated reading time.
 - Animated landing state (logo, placeholder guidance, ambient effects).
 - Feedback modal:
-  - Bug report / feature request modes.
-  - Optional attachments (up to 3 files, per-file size checks).
+  - Single unified request form (no tabs).
+  - Required email field with privacy tooltip.
+  - Request heading + description fields.
+  - Optional attachments (up to 3 files, 5MB each, per-file size checks).
   - Image compression before upload.
-  - Supabase storage + feedback table insert.
+  - Supabase storage + feedback table insert (type: 'request').
 
 ### Design and Brand Baseline
 - Name: `FormatMD`
@@ -45,10 +47,10 @@ Update this file after every completed process/task run.
 
 ### Architecture Baseline
 - `src/pages`: `Index.tsx`, `Docs.tsx`, `NotFound.tsx`
-- `src/components`: feature components (terminal/editor/toolbar/footer/modal)
+- `src/components`: TerminalPreview, MarkdownToolbar, Header, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows
 - `src/components/ui`: shared shadcn/ui primitives
-- `src/lib`: themes + HTML-to-markdown conversion
-- `src/hooks`: reusable behavior hooks (`useMarkdownPaste`, etc.)
+- `src/lib`: themes, htmlToMarkdown, markdownToHtml, downloadHandler, wikiContent, constants, utils
+- `src/hooks`: `useMarkdownPaste`
 - `src/integrations/supabase`: client + generated types
 
 ### Commands Baseline
@@ -662,6 +664,125 @@ Update this file after every completed process/task run.
 - Risks / follow-ups:
   - `skill.MD` currently downloads as filename `skill.md`; rename is easy if a different naming pattern is required.
   - Existing chunk-size warning (>500 kB) remains unrelated to this change.
+
+### 2026-03-10 (update 16 — Consistency Fixes, Themed 404, Production Readiness Plan)
+- Task: Fix BUG-012, resolve doc/code inconsistencies, create production readiness plan.
+- Changes made:
+  - Themed NotFound page using FormatMD theme model (BUG-012 resolved — last open bug).
+  - Fixed SEO descriptions to list all 5 export formats across Index.tsx, index.html, JSON-LD.
+  - Footer now includes Docs link alongside Home and Feedback.
+  - CLAUDE.md brand rules updated with text colors for both themes.
+  - Created `skills/PRODUCTION_READINESS_PLAN.md` — phased plan covering security, stability, performance, testing, accessibility, and launch.
+- Files touched:
+  - `src/pages/NotFound.tsx`, `src/pages/Index.tsx`, `index.html`
+  - `src/components/Footer.tsx`, `CLAUDE.md`
+  - `skills/ALL_BUGS.md`, `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+  - `skills/PRODUCTION_READINESS_PLAN.md` (NEW)
+  - `docs/wiki/2026-03-10-consistency-fixes-qa-prod-plan.md` (NEW)
+- Validation run: lint passed, test passed (3/3), build passed.
+- Bug status: **12/12 resolved, 0 open.**
+
+### 2026-03-10 (update 17 — Wiki Creation)
+- Task: Create comprehensive product wiki for FormatMD.
+- Changes made:
+  - Created 11 wiki pages under `docs/wiki/`:
+    - `Home.md` — product overview, quick links, tech stack, status, AI agent onboarding
+    - `Getting-Started.md` — install, setup, first run walkthrough, deployment
+    - `Features.md` — editor, smart paste, toolbar, copy, export, themes, stats, feedback, SEO
+    - `Themes.md` — color specs, behavior, typography, customization
+    - `Export-Formats.md` — clipboard, .md, skill.MD, .txt, .html, PDF
+    - `Architecture.md` — data flow, directory structure, state management, pipelines, Supabase schema
+    - `Component-Reference.md` — all components with props/behavior
+    - `Contributing.md` — workflow, quality gates, PR template, coding standards
+    - `FAQ.md` — common questions for humans and AI agents
+    - `Changelog.md` — consolidated from existing PR notes
+    - `_Sidebar.md` — navigation structure
+- Files touched: 11 new files under `docs/wiki/`
+- Validation run: lint passed, test passed (3/3), build passed.
+
+### 2026-03-10 (update 18 — Docs Page Rewrite + Footer Rename + GitHub Wiki Publish)
+- Task: Rename footer link to "Documentation", rewrite `/docs` page to render wiki content, publish wiki to GitHub Wiki tab.
+- Changes made:
+  - Renamed footer link from "Docs" to "Documentation" in `Footer.tsx`.
+  - Completely rewrote `Docs.tsx`:
+    - Sidebar navigation with 8 wiki pages (Overview, Getting Started, Editor, Formatting Toolbar, Themes, Copy & Export, Architecture, FAQ).
+    - Themed markdown rendering using existing `markdownToStyledHtml` engine.
+    - Prev/Next page navigation at bottom of each page.
+    - Theme toggle in header (with localStorage persistence).
+    - Mobile responsive with hamburger sidebar menu.
+  - Created `src/lib/wikiContent.ts` with 8 documentation pages as structured data.
+  - Homepage features section (`DocumentationSection`) left unchanged.
+  - Published all 11 wiki pages to GitHub Wiki tab (`formatmd-new.wiki.git`) with:
+    - Fixed links for GitHub wiki format (no `.md` extensions).
+    - Converted relative repo links to absolute GitHub URLs.
+- Files touched:
+  - `src/components/Footer.tsx`
+  - `src/pages/Docs.tsx` (rewrite)
+  - `src/lib/wikiContent.ts` (NEW)
+  - GitHub wiki repo: 11 pages published
+- Validation run: lint passed (0 errors, 2 non-blocking warnings), test passed (3/3), build passed.
+- Architecture note: `Docs.tsx` no longer uses `DocumentationSection` component — it renders wiki content directly via `markdownToStyledHtml`. The `DocumentationSection` is still used on the homepage landing second fold.
+
+### 2026-03-10 (update 19 — Shared Header, Play-Once Animations, Focused Hero)
+- Task: Add consistent header across homepage and docs, make animations play once, refocus hero on product value.
+- Changes made:
+  - Created shared `Header` component used on both Index and Docs pages:
+    - Transparent on homepage first fold, solid after scrolling past hero (60vh threshold).
+    - Always solid on docs page.
+    - Contains: logo, Documentation link, theme toggle, Feedback button.
+    - Active page link highlighting.
+  - Updated `AnimatedLogo`:
+    - Replaced icons: Palette, Zap, Smile → Hash, Terminal, FileCode (kept Code2).
+    - Icons now cycle once (Code2 → Hash → Terminal → FileCode) then stop. No infinite loop.
+    - Removed floating particle ping animations.
+  - Updated `AnimatedPlaceholder`:
+    - Plays through both examples once (dark → light) then disappears. No infinite loop.
+    - After animation completes, settles on first theme (infiniti dark).
+  - Rewrote homepage hero:
+    - Single clear headline: "Style your markdown. Copy it anywhere."
+    - Numbered steps: 1. Paste markdown → 2. Pick a theme → 3. Copy or export
+    - Removed old animated step badges.
+  - Docs page updated to use shared Header (removed inline header with ArrowLeft).
+  - **Editor behavior completely unchanged** — no modifications to TerminalPreview or editor flow.
+- Files touched:
+  - `src/components/Header.tsx` (NEW)
+  - `src/components/AnimatedLogo.tsx` (rewrite)
+  - `src/components/AnimatedPlaceholder.tsx` (play-once)
+  - `src/pages/Index.tsx` (header + hero rewrite)
+  - `src/pages/Docs.tsx` (use shared Header)
+  - `MEMORY.md`
+- Validation run: lint passed (0 errors, 2 non-blocking warnings), test passed (3/3), build passed.
+
+### 2026-04-30 — Architecture deepening: services + theme hook
+- Task: Apply the improve-codebase-architecture skill. Identified five deepening opportunities and implemented four; deliberately skipped the fifth after applying the deletion test (`useMarkdownPaste` concentrates real complexity, not a hollow wrapper).
+- Changes made:
+  - Theme persistence consolidated into `src/hooks/useTheme.ts` (localStorage read on init + write on change, returns `{ themeId, theme, setThemeId }`). Replaced scattered state + effect in `Index.tsx`.
+  - Clipboard logic extracted to `src/lib/clipboardService.ts` with `copyMarkdown(md, html)` returning `'rich' | 'plain'`. Removes inline `Blob`/`ClipboardItem`/`navigator.clipboard` wrangling from `Index.tsx`.
+  - Export formats consolidated into `src/lib/exportService.tsx` — single registry powers both the dropdown menu and `exportAs(id, md, html)` dispatch. PDF still opens a print window; download formats yield Blobs. Replaces and deletes `src/lib/downloadHandler.ts`.
+  - Stats computation extracted to `src/lib/markdownStats.ts` with named `WORDS_PER_MINUTE = 200`.
+  - Google Docs–specific heuristics in `htmlToMarkdown.ts` lifted into a named `normalizeRichTextDom()` pre-pass; `convertNode` now handles only semantic tags.
+  - Bundled (pre-existing in working tree) AnimatedPlaceholder ref API: `forwardRef` + `useImperativeHandle` exposing `stop()`. `Index.tsx` calls `placeholderRef.current?.stop()` on first user interaction or scroll past hero.
+  - Skipped: unifying the markdown converter import surface (only one caller per direction — would be shallow indirection) and folding `useMarkdownPaste` (deletion test showed it concentrates paste-detection complexity).
+- Files touched:
+  - `src/hooks/useTheme.ts` (NEW)
+  - `src/lib/clipboardService.ts` (NEW) + `clipboardService.test.ts` (NEW)
+  - `src/lib/exportService.tsx` (NEW) + `exportService.test.ts` (NEW)
+  - `src/lib/markdownStats.ts` (NEW) + `markdownStats.test.ts` (NEW)
+  - `src/lib/htmlToMarkdown.ts` (extract `normalizeRichTextDom`) + `htmlToMarkdown.test.ts` (NEW)
+  - `src/lib/downloadHandler.ts` (DELETED)
+  - `src/components/TerminalPreview.tsx`
+  - `src/components/AnimatedPlaceholder.tsx`
+  - `src/pages/Index.tsx`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> passed (0 errors, 2 pre-existing fast-refresh warnings in `src/components/ui/`)
+  - `npm run test` -> passed (34/34, 31 new across 4 new test files)
+  - `npm run build` -> passed
+- Browser check summary:
+  - Dev server running at `http://localhost:8080/`. Manual click-through of paste-from-Google-Docs, copy, and each export format not exercised in this session.
+- Risks / follow-ups:
+  - `src/lib/markdownToHtml.ts` still bakes inline theme styles directly into output HTML — couples conversion to presentation. Decoupling is a larger rewrite, deferred.
+  - Repo has no `.gitignore`; `dist/`, `.DS_Store`, and `.claude/*` are tracked historically. Worth introducing a `.gitignore` in a separate pass.
 
 ## Entry Template (use for every future update)
 - Date:

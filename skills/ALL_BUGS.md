@@ -7,16 +7,13 @@
 
 ## Open Bugs
 
-### `BUG-012` NotFound page is not themed
-- File: `src/pages/NotFound.tsx`
-- Evidence: uses `bg-muted`, `text-primary`, `text-muted-foreground` classes instead of FormatMD theme model.
-- Priority: Medium
-- Fix target: themed 404 page consistent with active theme colors.
+None.
 
 ---
 
 ## Resolved Bugs
 
+- `BUG-012` NotFound page now uses FormatMD theme model with `getTheme`, `AnimatedLogo`, and theme-aware colors.
 - `BUG-001` Footer transition freeze after paste/edit flow.
 - `BUG-001B` Editor first-open layout stuck after paste due hidden hero flex occupancy (fixed by explicit landing/editor conditional render path).
 - `BUG-002` `/docs` and `/docs#features` navigation collision.

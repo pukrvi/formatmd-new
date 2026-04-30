@@ -16,11 +16,11 @@ No sign-up. No install. Just paste and go.
 - **Rich copy** — copies styled HTML + plain text to clipboard
 - **Smart paste** — auto-converts HTML (from Google Docs, etc.) to markdown
 - **Two themes** — InfinitiGRID (dark) and Vaporwave (light), persisted across sessions
-- **Export** — download as `.md` (with YAML front matter), `.txt`, `.html`, or print-to-PDF
+- **Export** — download as clean `.md`, `skill.MD` (--- wrapped), `.txt`, `.html`, or print-to-PDF
 - **14-button formatting toolbar** — headings, bold, italic, code, lists, links, blockquotes, delimiters
 - **AI delimiter tools** — XML tags, HTML comments, 7 separator styles for structured prompts
 - **Live stats** — word count, character count, estimated reading time
-- **Feedback system** — bug reports and feature requests with file attachments (via Supabase)
+- **Feedback system** — unified request form with email, file attachments, and privacy controls (via Supabase)
 - **SEO-ready** — JSON-LD, Open Graph, Twitter Cards, sitemap, per-page meta tags
 
 ---
@@ -94,24 +94,28 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 src/
 ├── pages/              # Route-level pages (/, /docs, 404)
-├── components/         # Feature components (editor, toolbar, footer, modal)
+├── components/         # Feature components (editor, toolbar, footer, modal, docs section, SEO)
 │   └── ui/             # Shared shadcn/ui primitives
-├── lib/                # Utilities (themes, htmlToMarkdown, helpers)
-├── hooks/              # Shared hooks (useMarkdownPaste, etc.)
-├── integrations/       # Supabase client + generated types
-└── test/               # Test setup + specs
+├── lib/                # Utilities (themes, htmlToMarkdown, markdownToHtml, downloadHandler, constants)
+├── hooks/              # Shared hooks (useMarkdownPaste)
+└── integrations/       # Supabase client + generated types
 ```
 
 ### Key Files
 
-| File                                | Role                                     |
-|-------------------------------------|------------------------------------------|
-| `src/pages/Index.tsx`               | Landing page + main editor               |
-| `src/components/TerminalPreview.tsx`| Editor/preview with export and stats     |
-| `src/components/MarkdownToolbar.tsx`| 14 formatting actions + delimiter menu   |
-| `src/lib/themes.ts`                | Theme definitions (colors, fonts)        |
-| `src/lib/htmlToMarkdown.ts`        | HTML paste-to-Markdown converter         |
-| `src/hooks/useMarkdownPaste.ts`    | Shared clipboard paste handler           |
+| File                                     | Role                                        |
+|------------------------------------------|---------------------------------------------|
+| `src/pages/Index.tsx`                    | Landing page + main editor                  |
+| `src/components/TerminalPreview.tsx`     | Editor/preview with export and stats        |
+| `src/components/MarkdownToolbar.tsx`     | 14 formatting actions + delimiter menu      |
+| `src/components/DocumentationSection.tsx`| Features fold (shared by Index and Docs)    |
+| `src/components/SEOHead.tsx`             | Per-page meta tags and Open Graph           |
+| `src/components/FeedbackModal.tsx`       | Unified request form with attachments       |
+| `src/lib/themes.ts`                     | Theme definitions (colors, fonts)           |
+| `src/lib/htmlToMarkdown.ts`             | HTML paste-to-Markdown converter            |
+| `src/lib/markdownToHtml.ts`             | Markdown-to-styled-HTML renderer            |
+| `src/lib/downloadHandler.ts`            | Export/download logic (md, skill.MD, txt, html, pdf) |
+| `src/hooks/useMarkdownPaste.ts`         | Shared clipboard paste handler              |
 
 ---
 
