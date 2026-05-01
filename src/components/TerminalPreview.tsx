@@ -160,7 +160,7 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
 
         {/* Toolbar row: formatting tools on left, action buttons on right */}
         {onMarkdownChange && (
-          <div className="flex items-center shrink-0 border-b h-10 relative z-10" style={{ borderColor: `${theme.colors.heading}15`, overflow: 'visible' }}>
+          <div className="flex items-center shrink-0 border-b h-10 relative z-10" style={{ borderColor: `${theme.colors.heading}15`, backgroundColor: theme.colors.panel + '30', overflow: 'visible' }}>
             <div className="flex-1 min-w-0" style={{ overflow: 'visible' }}>
               {showEditor && (
                 <MarkdownToolbar
