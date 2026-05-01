@@ -250,7 +250,6 @@ const MarkdownToolbar = ({ theme, textareaRef, onMarkdownChange, markdown }: Mar
       className="flex items-center gap-0.5 px-3 py-1 shrink-0 relative"
       style={{
         overflow: 'visible',
-        backgroundColor: theme.colors.panel + '30',
       }}
     >
       {actions.map((item, index) => (
