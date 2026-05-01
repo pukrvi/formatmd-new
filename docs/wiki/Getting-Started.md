@@ -22,16 +22,7 @@ npm run dev
 
 The app runs at `http://localhost:8080` by default.
 
-## Environment Variables
-
-Copy `.env.example` to `.env` and fill in your Supabase credentials:
-
-```
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-```
-
-> **Note:** The anon key is a client-side publishable key. Row-Level Security (RLS) policies are the security boundary, not key secrecy.
+FormatMD is fully self-contained — **no environment variables required**. There is no backend, database, or external service to configure.
 
 ## Commands
 

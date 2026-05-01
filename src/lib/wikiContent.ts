@@ -106,10 +106,25 @@ The editor supports three view modes:
 | Mode | Description |
 |------|-------------|
 | **Editor** | Full-width markdown editing textarea |
-| **Split** | Side-by-side editor and styled preview |
+| **Split** | Side-by-side editor and styled preview, with synced scrolling by default |
 | **Preview** | Full-width styled HTML output |
 
 Switch between modes using the toggle buttons in the terminal header bar.
+
+---
+
+## Synced Scroll (Split View)
+
+In Split view, the editor and preview scroll **together by default** so you can compare raw markdown against rendered output line-for-line. The two panes are kept in sync proportionally — scrolling one moves the other to the equivalent vertical position.
+
+A **Lock / Unlock** button appears in the toolbar action area while you are in Split mode:
+
+| State | Behavior |
+|-------|----------|
+| **Locked** (default) | Editor and preview scroll together |
+| **Unlocked** | Each pane scrolls independently |
+
+The button is hidden in Editor-only or Preview-only modes since synced scrolling is irrelevant there. Toggling the lock does **not** snap either pane — it just stops further sync until you re-enable it.
 
 ---
 

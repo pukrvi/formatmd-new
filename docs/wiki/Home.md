@@ -64,7 +64,8 @@ FormatMD is a web-based markdown formatter and styler built by [Puneet Vishnawat
 | Build | Vite 5 + SWC |
 | Styling | Tailwind CSS 3.4 + shadcn/ui |
 | Routing | React Router v6 |
-| Backend | Supabase (PostgreSQL + Storage) |
+| Backend | None — fully client-side |
+| State | Local React state + `localStorage` (theme persistence) |
 | SEO | react-helmet-async, JSON-LD, Open Graph |
 | Fonts | Poppins (UI) + Fira Code (editor/code) |
 | Testing | Vitest + JSDOM |
@@ -79,13 +80,11 @@ formatmd/
 │   ├── pages/           # Route-level pages (/, /docs, 404)
 │   ├── components/      # Feature UI components
 │   │   └── ui/          # shadcn/ui primitives
-│   ├── lib/             # Utilities (themes, converters, export)
-│   ├── hooks/           # Shared React hooks
-│   └── integrations/    # Supabase client + types
+│   ├── lib/             # Utilities (themes, converters, export, clipboard, stats)
+│   └── hooks/           # Shared React hooks (useTheme, useMarkdownPaste)
 ├── public/              # Static assets (sitemap, robots, OG image)
 ├── docs/wiki/           # This wiki
 ├── skills/              # QA, bugs, SEO, UI/UX tracking docs
-├── supabase/            # Database migrations
 └── dist/                # Production build output
 ```
 

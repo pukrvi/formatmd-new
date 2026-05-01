@@ -11,7 +11,7 @@ The core of FormatMD is a live markdown editor with three view modes:
 | Mode | Description |
 |------|-------------|
 | **Editor** | Full-width markdown editing textarea |
-| **Split** | Side-by-side editor and styled preview |
+| **Split** | Side-by-side editor and styled preview, with synced scrolling by default |
 | **Preview** | Full-width styled HTML output |
 
 **Key behaviors:**
@@ -19,6 +19,24 @@ The core of FormatMD is a live markdown editor with three view modes:
 - Terminal-style header with traffic light buttons and view-mode toggle
 - Theme-aware syntax coloring in the editor
 - Cursor position and selection state preserved across formatting actions
+
+**Source:** [`src/components/TerminalPreview.tsx`](../../src/components/TerminalPreview.tsx)
+
+---
+
+## Synced Scroll (Split View)
+
+In Split view, the editor and preview scroll together by default — line up the raw markdown against the rendered output without manually matching positions.
+
+**Behavior:**
+- Default state is **Locked** — scrolling either pane drives the other proportionally (`scrollTop / scrollMax` ratio)
+- A **Lock / Unlock** toggle appears in the toolbar action area, visible only in Split mode
+- Toggling does not snap either pane — it just stops further sync until re-enabled
+- An internal flag prevents the programmatic counter-scroll from triggering a feedback loop
+
+**Implementation:**
+- Native `addEventListener('scroll', ...)` on each pane (React's `onScroll` prop is unreliable for divs across browsers when scrollTop is set programmatically)
+- `useEffect` re-attaches the listeners when `viewMode` changes
 
 **Source:** [`src/components/TerminalPreview.tsx`](../../src/components/TerminalPreview.tsx)
 
@@ -166,21 +184,20 @@ The editor footer displays real-time document statistics:
 
 ## Feedback System
 
-A unified request form for bug reports, feature requests, and general feedback.
+A unified request form for bug reports, feature requests, and general feedback. **No backend involved** — submission opens the user's default mail client with the message pre-filled.
 
 **Fields:**
 | Field | Required | Details |
 |-------|----------|---------|
-| Email | Yes | With privacy tooltip |
-| Heading | Yes | Brief title for the request |
-| Description | Yes | Detailed description |
-| Attachments | No | Up to 3 files, 5MB each |
+| Email | Yes | Embedded in the email body so we can reply |
+| Heading | Yes | Becomes the email subject line (`[FormatMD] {heading}`) |
+| Description | Yes | Becomes the email body |
 
 **Technical details:**
-- Images are compressed before upload (canvas-based, JPEG 70% quality)
-- Files stored in Supabase Storage bucket
-- Form data saved to Supabase `feedback` table
-- Success/error feedback via toast notifications
+- Submit builds a `mailto:pukrvi@gmail.com?subject=...&body=...` URL
+- `window.location.href` is set to the URL, opening the OS default mail client
+- Nothing leaves the browser unless the user actually sends the email
+- No tracking, no storage, no third-party services
 
 **Source:** [`src/components/FeedbackModal.tsx`](../../src/components/FeedbackModal.tsx)
 

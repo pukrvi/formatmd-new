@@ -76,12 +76,8 @@ src/
 │   └── utils.ts            # General utilities (cn helper)
 │
 ├── hooks/                  # Shared React hooks
-│   └── useMarkdownPaste.ts # Clipboard paste handler
-│
-├── integrations/           # External services
-│   └── supabase/
-│       ├── client.ts       # Supabase client initialization
-│       └── types.ts        # Generated database types
+│   ├── useMarkdownPaste.ts # Clipboard paste handler
+│   └── useTheme.ts         # Theme persistence + state
 │
 └── test/                   # Test infrastructure
     └── setup.ts            # Vitest setup (JSDOM)
@@ -191,31 +187,20 @@ Clean markdown string
 
 ---
 
-## Backend Integration (Supabase)
+## Backend Integration
 
-Supabase is used only for the feedback system:
+**None.** FormatMD is a fully client-side single-page application. There is no backend, no database, no authentication, and no environment variables required to run.
+
+The feedback system uses a `mailto:` link — the modal collects an email, heading, and description, then constructs a `mailto:pukrvi@gmail.com?subject=...&body=...` URL and opens the user's default mail client. Nothing leaves the browser unless the user actually sends the email.
 
 ```
 FeedbackModal
     │
-    ├── Form submission → supabase.from('feedback').insert(...)
-    │   Fields: email, heading, description, attachment_urls
-    │
-    └── File upload → supabase.storage.from('feedback-attachments').upload(...)
-        - Images compressed to JPEG 70% before upload
-        - Max 3 files, 5MB each
-        - Unique path: `feedback/{timestamp}-{filename}`
+    └── Submit → window.location.href = `mailto:pukrvi@gmail.com?subject=...&body=...`
+        - Subject: [FormatMD] {heading}
+        - Body: From: {email}\n\n{description}
+        - Default mail client opens with the message pre-filled
 ```
-
-**Database schema:**
-| Column | Type | Required |
-|--------|------|----------|
-| id | uuid | auto |
-| email | text | yes |
-| heading | text | yes |
-| description | text | yes |
-| attachment_urls | text[] | no |
-| created_at | timestamp | auto |
 
 ---
 

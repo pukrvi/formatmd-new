@@ -18,6 +18,8 @@ No sign-up. No install. No backend. Just paste and go.
 ## Features
 
 - **Live editor** with Editor, Split, and Preview modes
+- **Synced scrolling** in Split view — editor and preview scroll together by default; toggle the lock to scroll independently
+- **Sticky header** on homepage and documentation
 - **Rich copy** — copies styled HTML + plain text to clipboard
 - **Smart paste** — auto-converts HTML (from Google Docs, etc.) to markdown
 - **Two themes** — InfinitiGRID (dark) and Vaporwave (light), persisted across sessions
@@ -27,6 +29,7 @@ No sign-up. No install. No backend. Just paste and go.
 - **Live stats** — word count, character count, estimated reading time
 - **Feedback system** — unified request form that opens the user's default mail client with the message pre-filled (no backend)
 - **SEO-ready** — JSON-LD, Open Graph, Twitter Cards, sitemap, per-page meta tags
+- **MIT licensed** and fully open-source — see [LICENSE](./LICENSE)
 
 ---
 

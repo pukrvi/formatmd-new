@@ -4,6 +4,33 @@ Recent changes to FormatMD, organized by date.
 
 ---
 
+## 2026-05-01
+
+### Synced Scrolling, Toolbar Background, Documentation Sweep
+**PR:** `feat/scroll-lock-toolbar-bg-docs`
+
+- **Synced scroll** in Split view: editor and preview scroll together by default. New Lock/Unlock toggle in the toolbar action area, visible only in Split mode. Locked state is the default. Sync is proportional (`scrollTop / scrollMax` ratio), implemented via native `addEventListener` (React's `onScroll` prop is unreliable for divs across browsers). Feedback loops blocked by an `isSyncingScroll` ref.
+- **Toolbar row background** unified: lifted the `panel + 30%` tint from the inner `MarkdownToolbar` up to the parent toolbar row so the formatting buttons (left) and action buttons (right) share one consistent background. Fixes the visible color seam.
+- **Documentation sweep**: removed every remaining stale Supabase reference from wiki, skills docs, and on-page docs. README, Features, Architecture, Component-Reference, Getting-Started, Home, FAQ, and Contributing all updated.
+
+**Validation:** lint passed, tests 34/34, build clean.
+
+---
+
+## 2026-04-30
+
+### Self-contained app — Supabase removed, MIT licensed, sticky header
+**PR:** `feat/self-contained-mit-license-sticky-header` (merged)
+
+- **Supabase removed entirely.** App is now fully client-side: no backend, no database, no environment variables. Feedback modal rewritten to build a `mailto:pukrvi@gmail.com?subject=...&body=...` URL on submit. Deleted `src/integrations/supabase/`, the `supabase/` directory, `@supabase/supabase-js` dependency, and the `.env`/`.env.example` files.
+- **Sticky header** on both `/` and `/docs`. Root cause was `overflow-x-hidden` on the page root cancelling `position: sticky` for descendants on Index, plus a height-zero flex wrapper around the Header on Docs. Both fixed.
+- **MIT license**: added `LICENSE` (canonical MIT text, © 2026 Puneet Vishnawat). `package.json` declares `license: "MIT"` plus `author`, `repository`, `homepage`, `bugs`, `keywords`. README badges; new License page in the docs wiki.
+- **Architecture refactors**: extracted `clipboardService.ts`, `exportService.tsx`, `markdownStats.ts`, `useTheme.ts`, plus a `normalizeRichTextDom()` pre-pass in `htmlToMarkdown.ts`. Replaced `downloadHandler.ts` with the format-registry pattern.
+
+**Validation:** lint 0 errors, tests 34/34, build clean.
+
+---
+
 ## 2026-03-10
 
 ### Consistency Fixes, QA, and Production Readiness Plan
@@ -25,7 +52,7 @@ Recent changes to FormatMD, organized by date.
 - Removed bug/feature toggle tabs from feedback modal
 - Unified into single request form: email, heading, description, optional attachments
 - Added privacy tooltip near email field
-- Aligned Supabase schema/types for `email` and `type: request`
+- Aligned Supabase schema/types for `email` and `type: request` *(superseded — see 2026-04-30 entry above; Supabase has since been removed and the form now uses `mailto:`)*
 
 **Note:** Migration `20260310124500_feedback_request_form.sql` required before production.
 

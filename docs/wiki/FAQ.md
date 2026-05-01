@@ -61,7 +61,7 @@ npm run dev
 ```
 
 ### What's the tech stack?
-React 18 + TypeScript 5 + Vite 5 + Tailwind CSS + shadcn/ui + Supabase.
+React 18 + TypeScript 5 + Vite 5 + Tailwind CSS + shadcn/ui. **No backend** — fully client-side. Feedback uses a `mailto:` link to the maintainer.
 
 ### How do I run tests?
 ```bash
@@ -98,13 +98,15 @@ Plan → Implement → `npm run lint` → `npm run test` → `npm run build` →
 | Theme definitions | `src/lib/themes.ts` |
 | Markdown → HTML | `src/lib/markdownToHtml.ts` |
 | HTML → Markdown | `src/lib/htmlToMarkdown.ts` |
-| Export logic | `src/lib/downloadHandler.ts` |
+| Export logic | `src/lib/exportService.tsx` |
+| Clipboard logic | `src/lib/clipboardService.ts` |
+| Stats calculation | `src/lib/markdownStats.ts` |
 | Paste handler | `src/hooks/useMarkdownPaste.ts` |
+| Theme persistence | `src/hooks/useTheme.ts` |
 
 ### What are the scope guardrails?
 - Only change files in the project directory
 - Keep changes minimal and focused
-- Don't edit generated files (e.g., `src/integrations/supabase/client.ts`)
 - Follow existing patterns before introducing new ones
 
 ### How do I update documentation?
