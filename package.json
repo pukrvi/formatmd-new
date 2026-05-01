@@ -1,7 +1,30 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "formatmd",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Self-contained markdown formatter and styler that converts markdown into themed, copy-ready output for editors, docs, and exports.",
+  "license": "MIT",
+  "author": {
+    "name": "Puneet Vishnawat",
+    "url": "https://infinitigrid.com/"
+  },
+  "homepage": "https://github.com/pukrvi/formatmd-new#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pukrvi/formatmd-new.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pukrvi/formatmd-new/issues"
+  },
+  "keywords": [
+    "markdown",
+    "formatter",
+    "editor",
+    "react",
+    "vite",
+    "typescript",
+    "tailwindcss"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +41,6 @@
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@supabase/supabase-js": "^2.98.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",

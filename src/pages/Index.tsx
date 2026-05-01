@@ -139,7 +139,7 @@ const Index = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col overflow-x-hidden relative transition-colors duration-1000"
+      className="min-h-screen flex flex-col relative transition-colors duration-1000"
       style={{ backgroundColor: c.background }}>
 
       <SEOHead
@@ -164,18 +164,20 @@ const Index = () => {
           style={{ backgroundColor: c.keyword, animationPlayState: hasContent ? 'paused' : 'running' }} />
       </div>
 
+      {/* Header — sticky, lives outside the overflow context so position:sticky resolves */}
+      {!hasContent && (
+        <Header
+          themeId={landingTheme.id}
+          transparent={!scrolledPastHero}
+          onThemeChange={handleThemeToggle}
+          onFeedbackClick={() => setFeedbackOpen(true)}
+        />
+      )}
+
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col flex-1">
+      <div className="relative z-10 flex flex-col flex-1 overflow-x-hidden">
         {!hasContent ? (
           <>
-            {/* Header — transparent on hero, solid after scroll */}
-            <Header
-              themeId={landingTheme.id}
-              transparent={!scrolledPastHero}
-              onThemeChange={handleThemeToggle}
-              onFeedbackClick={() => setFeedbackOpen(true)}
-            />
-
             {/* Hero */}
             <section className="min-h-[calc(100svh-53px)] flex flex-col items-center justify-center px-4 sm:px-6 py-12 relative">
               {/* Headline */}

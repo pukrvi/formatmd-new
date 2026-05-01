@@ -57,24 +57,21 @@ const Docs = () => {
         path="/docs"
       />
 
-      {/* Shared Header */}
-      <div className="flex items-center">
-        <div className="flex-1">
-          <Header
-            themeId={themeId}
-            onThemeChange={setThemeId}
-            onFeedbackClick={() => setFeedbackOpen(true)}
-          />
-        </div>
-        {/* Mobile sidebar toggle — overlaid beside header */}
-        <button
-          className="lg:hidden absolute left-4 z-40 p-1.5 rounded-md transition-colors"
-          style={{ color: c.heading }}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
+      {/* Shared Header — direct child of root so sticky positions against the page scroll */}
+      <Header
+        themeId={themeId}
+        onThemeChange={setThemeId}
+        onFeedbackClick={() => setFeedbackOpen(true)}
+      />
+
+      {/* Mobile sidebar toggle — fixed so it stays visible when the page scrolls */}
+      <button
+        className="lg:hidden fixed top-3 left-4 z-40 p-1.5 rounded-md transition-colors"
+        style={{ color: c.heading }}
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
 
       <div className="flex-1 flex max-w-6xl mx-auto w-full">
         {/* Mobile sidebar overlay */}
