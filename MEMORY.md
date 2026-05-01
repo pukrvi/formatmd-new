@@ -784,6 +784,38 @@ Update this file after every completed process/task run.
   - `src/lib/markdownToHtml.ts` still bakes inline theme styles directly into output HTML — couples conversion to presentation. Decoupling is a larger rewrite, deferred.
   - Repo has no `.gitignore`; `dist/`, `.DS_Store`, and `.claude/*` are tracked historically. Worth introducing a `.gitignore` in a separate pass.
 
+### 2026-05-01 — Supabase removal, sticky header, MIT licensing
+- Task: Make the project self-contained (remove Supabase entirely), make the Header sticky on homepage and Docs, register the project under a proper open-source license.
+- Changes made:
+  - **Supabase removal**: Rewrote `FeedbackModal.tsx` to build a `mailto:pukrvi@gmail.com?subject=...&body=...` URL on submit and open the user's default mail client; dropped attachment field and async/loading state. Deleted `src/integrations/supabase/` and the `supabase/` directory (config + migrations). Removed `@supabase/supabase-js` from `package.json` and regenerated `package-lock.json` (zero supabase refs left). Deleted `.env` and `.env.example`. Removed Supabase preconnect from `index.html`. Updated `wikiContent.ts`, `README.md`, and `CLAUDE.md` to drop Supabase mentions and document the no-backend posture.
+  - **Sticky header (root cause fixes, not just CSS)**:
+    - `Index.tsx`: removed `overflow-x-hidden` from the page root (it was cancelling `position: sticky` for every descendant) and applied it instead to the inner content wrapper that is now a sibling of the Header.
+    - `Docs.tsx`: unwrapped the Header from `<div className="flex items-center"><div className="flex-1">` (the wrapper had no min-height, so the sticky containing block was exactly the Header's height — nowhere to stick). Moved the mobile sidebar toggle from `absolute` to `fixed top-3 left-4` so it stays visible while scrolling.
+  - **MIT licensing**:
+    - Added `LICENSE` (canonical MIT text, © 2026 Puneet Vishnawat).
+    - Updated `package.json` with `license: "MIT"`, `author`, `repository`, `homepage`, `bugs`, `keywords`, a real `description`, and renamed the package from `vite_react_shadcn_ts` → `formatmd`.
+    - Replaced the "Proprietary. All rights reserved." block in `README.md` with an MIT license section + 4 status badges (License/React/TypeScript/Vite) at the top.
+    - Added a new `License` page to the docs wiki (`wikiContent.ts`) covering rights, attribution, SPDX identifier, and a clarification that open-source licenses do not require registration with any authority.
+- Files touched:
+  - `LICENSE` (NEW)
+  - `package.json`, `package-lock.json`
+  - `README.md`, `CLAUDE.md`, `index.html`
+  - `src/components/FeedbackModal.tsx` (mailto rewrite)
+  - `src/integrations/supabase/client.ts` (DELETED), `src/integrations/supabase/types.ts` (DELETED)
+  - `supabase/` (DELETED — config.toml + migrations)
+  - `src/lib/wikiContent.ts` (License page + Supabase removed)
+  - `src/pages/Index.tsx`, `src/pages/Docs.tsx` (sticky fixes)
+  - `.env`, `.env.example` (DELETED)
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> 0 errors, 2 pre-existing warnings (shadcn primitives)
+  - `npm run test` -> 34/34 pass
+  - `npm run build` -> clean (363 KB / 115 KB gzipped main chunk)
+  - Browser smoke test (preview server): both `/` and `/docs` confirmed `position: sticky` resolves to top:0 after scrolling 600–800px; License page reachable in Docs sidebar; FeedbackModal opens with new copy ("Open Email Client" submit button) and the file-attachment field is gone.
+- Risks / follow-ups:
+  - **Stale Supabase mentions in long-form docs**: `docs/wiki/Architecture.md`, `Getting-Started.md`, `Changelog.md`, `Home.md`, `Contributing.md`, `FAQ.md`, `Features.md`, `Component-Reference.md`, `skills/PRODUCTION_READINESS_PLAN.md`, and `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` still reference Supabase. Worth a follow-up cleanup pass.
+  - PR notes from 2026-03-10 and earlier MEMORY change-log entries reference Supabase as historical record — left as-is (these are an audit trail of how the project evolved, not current docs).
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:

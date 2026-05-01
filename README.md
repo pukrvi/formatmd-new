@@ -1,10 +1,15 @@
 # FormatMD
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+
 **Paste markdown. Style it. Copy anywhere.**
 
-FormatMD is a web-based markdown formatter and styler. Paste or type markdown, apply a visual theme, and copy styled rich-text output into Google Docs, Notion, Slack, email — or export as `.md`, `.html`, `.txt`, or PDF.
+FormatMD is a fully client-side markdown formatter and styler. Paste or type markdown, apply a visual theme, and copy styled rich-text output into Google Docs, Notion, Slack, email — or export as `.md`, `.html`, `.txt`, or PDF.
 
-No sign-up. No install. Just paste and go.
+No sign-up. No install. No backend. Just paste and go.
 
 > Created by **Puneet Vishnawat** @ [InfinitiGRID](https://infinitigrid.com)
 
@@ -20,7 +25,7 @@ No sign-up. No install. Just paste and go.
 - **14-button formatting toolbar** — headings, bold, italic, code, lists, links, blockquotes, delimiters
 - **AI delimiter tools** — XML tags, HTML comments, 7 separator styles for structured prompts
 - **Live stats** — word count, character count, estimated reading time
-- **Feedback system** — unified request form with email, file attachments, and privacy controls (via Supabase)
+- **Feedback system** — unified request form that opens the user's default mail client with the message pre-filled (no backend)
 - **SEO-ready** — JSON-LD, Open Graph, Twitter Cards, sitemap, per-page meta tags
 
 ---
@@ -33,8 +38,8 @@ No sign-up. No install. Just paste and go.
 | Build      | Vite 5 + SWC                                  |
 | Styling    | Tailwind CSS 3.4 + shadcn/ui                  |
 | Routing    | React Router v6                               |
-| Backend    | Supabase (PostgreSQL + Storage)               |
-| Data       | Local React state + Supabase client           |
+| Backend    | None — fully client-side                      |
+| Data       | Local React state + `localStorage`            |
 | SEO        | react-helmet-async                            |
 | Fonts      | Poppins (UI) + Fira Code (editor)             |
 
@@ -63,16 +68,7 @@ npm run dev
 
 The app runs at `http://localhost:8080` by default.
 
-### Environment Variables
-
-Copy `.env.example` to `.env` and fill in your Supabase credentials:
-
-```
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-```
-
-> **Note:** The anon key is a client-side publishable key. Row-Level Security (RLS) policies are the security boundary, not key secrecy.
+FormatMD is fully self-contained — no backend, no database, no environment variables required.
 
 ---
 
@@ -96,9 +92,8 @@ src/
 ├── pages/              # Route-level pages (/, /docs, 404)
 ├── components/         # Feature components (editor, toolbar, footer, modal, docs section, SEO)
 │   └── ui/             # Shared shadcn/ui primitives
-├── lib/                # Utilities (themes, htmlToMarkdown, markdownToHtml, downloadHandler, constants)
-├── hooks/              # Shared hooks (useMarkdownPaste)
-└── integrations/       # Supabase client + generated types
+├── lib/                # Utilities (themes, converters, export, clipboard, stats)
+└── hooks/              # Shared hooks (useMarkdownPaste, useTheme)
 ```
 
 ### Key Files
@@ -110,12 +105,15 @@ src/
 | `src/components/MarkdownToolbar.tsx`     | 14 formatting actions + delimiter menu      |
 | `src/components/DocumentationSection.tsx`| Features fold (shared by Index and Docs)    |
 | `src/components/SEOHead.tsx`             | Per-page meta tags and Open Graph           |
-| `src/components/FeedbackModal.tsx`       | Unified request form with attachments       |
-| `src/lib/themes.ts`                     | Theme definitions (colors, fonts)           |
-| `src/lib/htmlToMarkdown.ts`             | HTML paste-to-Markdown converter            |
-| `src/lib/markdownToHtml.ts`             | Markdown-to-styled-HTML renderer            |
-| `src/lib/downloadHandler.ts`            | Export/download logic (md, skill.MD, txt, html, pdf) |
-| `src/hooks/useMarkdownPaste.ts`         | Shared clipboard paste handler              |
+| `src/components/FeedbackModal.tsx`       | Unified request form (opens mailto link)    |
+| `src/lib/themes.ts`                      | Theme definitions (colors, fonts)           |
+| `src/lib/htmlToMarkdown.ts`              | HTML paste-to-Markdown converter            |
+| `src/lib/markdownToHtml.ts`              | Markdown-to-styled-HTML renderer            |
+| `src/lib/exportService.tsx`              | Export registry (md, skill.MD, txt, html, pdf) |
+| `src/lib/clipboardService.ts`            | Rich + plain copy with fallback             |
+| `src/lib/markdownStats.ts`               | Word/char count + estimated reading time    |
+| `src/hooks/useTheme.ts`                  | Theme state + `localStorage` persistence    |
+| `src/hooks/useMarkdownPaste.ts`          | Shared clipboard paste handler              |
 
 ---
 
@@ -181,5 +179,8 @@ Detailed project documentation lives in the `skills/` directory:
 
 ## License
 
-Proprietary. All rights reserved.
-Created by Puneet Vishnawat @ InfinitiGRID.
+FormatMD is released under the [MIT License](./LICENSE) — © 2026 Puneet Vishnawat.
+
+You are free to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, subject to the conditions in the [LICENSE](./LICENSE) file. The software is provided "as is", without warranty of any kind.
+
+> Open source licenses do not require registration. Including the LICENSE file with the canonical MIT text and a copyright line is sufficient — GitHub auto-detects it and surfaces the badge above. The SPDX identifier is `MIT`.

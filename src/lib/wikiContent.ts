@@ -66,16 +66,7 @@ npm run dev
 
 The app runs at \`http://localhost:8080\` by default.
 
-## Environment Variables
-
-Copy \`.env.example\` to \`.env\` and fill in your Supabase credentials:
-
-\`\`\`
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-\`\`\`
-
-> The anon key is a client-side publishable key. Row-Level Security (RLS) policies are the security boundary.
+FormatMD is a fully client-side app — no backend, no database, no environment variables required.
 
 ---
 
@@ -315,7 +306,7 @@ Opens the browser's native print dialog with a styled HTML document. Use "Save a
 | Build | Vite 5 + SWC |
 | Styling | Tailwind CSS 3.4 + shadcn/ui |
 | Routing | React Router v6 |
-| Backend | Supabase (PostgreSQL + Storage) |
+| Backend | None — fully client-side |
 | SEO | react-helmet-async, JSON-LD |
 | Fonts | Poppins (UI) + Fira Code (editor) |
 | Testing | Vitest + JSDOM |
@@ -329,7 +320,6 @@ Opens the browser's native print dialog with a styled HTML document. Use "Save a
 - \`src/components/ui/\` — shadcn/ui primitives
 - \`src/lib/\` — Utilities (themes, converters, export)
 - \`src/hooks/\` — Shared React hooks
-- \`src/integrations/\` — Supabase client + types
 
 ---
 
@@ -412,5 +402,52 @@ FormatMD uses the browser's native print-to-PDF for best quality. Select "Save a
 
 ### Can I copy styled content to Google Docs?
 Yes. Click **Copy** and paste — headings, bold, italic, lists, code, and links will be preserved as formatted text.`,
+  },
+  {
+    id: 'license',
+    title: 'License',
+    icon: '©',
+    content: `# License
+
+FormatMD is released under the **MIT License** — © 2026 Puneet Vishnawat.
+
+## What this means
+
+You are free to:
+
+- **Use** the software for any purpose, personal or commercial
+- **Copy and modify** the source code
+- **Distribute** copies of the original or your changes
+- **Sublicense** and sell copies
+
+The only requirement: include the original copyright notice and the MIT license text in any substantial portion you distribute.
+
+## No warranty
+
+The software is provided "as is", without warranty of any kind. The authors are not liable for any claim, damages, or other liability arising from use of the software.
+
+## Where the license lives
+
+The full license text is in the [\`LICENSE\`](https://github.com/pukrvi/formatmd-new/blob/main/LICENSE) file at the root of the repository.
+
+## How to attribute
+
+Including the contents of the \`LICENSE\` file is sufficient. A typical attribution line looks like:
+
+\`\`\`
+FormatMD — © 2026 Puneet Vishnawat — MIT License
+\`\`\`
+
+## SPDX identifier
+
+If you maintain a software bill of materials (SBOM), use:
+
+\`\`\`
+SPDX-License-Identifier: MIT
+\`\`\`
+
+## A note on registration
+
+Open source licenses do **not** require registration with any authority. Including the canonical license text plus a copyright line in your repository is legally sufficient. GitHub auto-detects the LICENSE file and displays the license badge on the repository page; package managers like npm read the \`license\` field in \`package.json\`. There is no central registry to "apply" to.`,
   },
 ];

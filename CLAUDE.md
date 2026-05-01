@@ -41,15 +41,14 @@ If instructions conflict, follow the highest level and state the tradeoff clearl
 - Only change files in `/Users/gtmbuddy/Documents/formatmd/`.
 - Keep task scope tight; avoid unrelated refactors.
 - Do not edit generated artifacts directly unless regeneration is part of the request.
-- Example generated file: `src/integrations/supabase/client.ts`.
 
 ## Architecture (WHAT)
 - `src/pages`: route-level pages (`/`, `/docs`, `*`).
-- `src/components`: feature UI (TerminalPreview, MarkdownToolbar, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows).
+- `src/components`: feature UI (TerminalPreview, MarkdownToolbar, Header, Footer, FeedbackModal, DocumentationSection, SEOHead, AnimatedLogo, AnimatedPlaceholder, ScrollArrows).
 - `src/components/ui`: shared shadcn/ui primitives.
-- `src/lib`: utilities (`themes`, `htmlToMarkdown`, `markdownToHtml`, `downloadHandler`, `constants`, `utils`).
-- `src/hooks`: shared hooks (`useMarkdownPaste`).
-- `src/integrations/supabase`: Supabase client + generated types.
+- `src/lib`: utilities (`themes`, `htmlToMarkdown`, `markdownToHtml`, `clipboardService`, `exportService`, `markdownStats`, `wikiContent`, `constants`, `utils`).
+- `src/hooks`: shared hooks (`useMarkdownPaste`, `useTheme`).
+- Fully client-side — no backend, database, or external API dependencies.
 
 ## Architecture Intent (WHY)
 - Editor-first workflow with immediate visual feedback.

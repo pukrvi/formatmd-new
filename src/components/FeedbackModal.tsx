@@ -1,11 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTheme, ThemeId } from '@/lib/themes';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { Upload, X, Loader2, CircleHelp } from 'lucide-react';
+import { CircleHelp } from 'lucide-react';
 
 interface FeedbackModalProps {
   open: boolean;
@@ -13,96 +12,15 @@ interface FeedbackModalProps {
   themeId?: ThemeId;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
-const compressFile = async (file: File): Promise<File> => {
-  // For images, compress using canvas
-  if (file.type.startsWith('image/')) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 1200;
-        let { width, height } = img;
-        if (width > maxDim || height > maxDim) {
-          const ratio = Math.min(maxDim / width, maxDim / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          URL.revokeObjectURL(url);
-          resolve(file);
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-          (blob) => {
-            URL.revokeObjectURL(url);
-            if (!blob) {
-              resolve(file);
-              return;
-            }
-            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-          },
-          'image/jpeg',
-          0.7
-        );
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        resolve(file);
-      };
-      img.src = url;
-    });
-  }
-  return file;
-};
+const FEEDBACK_RECIPIENT = 'pukrvi@gmail.com';
 
 const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackModalProps) => {
   const theme = getTheme(themeId);
   const [email, setEmail] = useState('');
   const [requestHeading, setRequestHeading] = useState('');
   const [description, setDescription] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(e.target.files || []);
-    const remainingSlots = Math.max(0, 3 - files.length);
-    if (remainingSlots === 0) {
-      toast.info('Maximum of 3 attachments reached');
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      return;
-    }
-
-    const filesToProcess = newFiles.slice(0, remainingSlots);
-    if (newFiles.length > remainingSlots) {
-      toast.info(`Only ${remainingSlots} additional file(s) can be attached`);
-    }
-
-    const valid: File[] = [];
-    for (const f of filesToProcess) {
-      if (f.size > MAX_FILE_SIZE) {
-        toast.error(`${f.name} exceeds 5MB limit`);
-        continue;
-      }
-      const compressed = await compressFile(f);
-      valid.push(compressed);
-    }
-    setFiles((prev) => [...prev, ...valid]);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const normalizedEmail = email.trim().toLowerCase();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(normalizedEmail)) {
@@ -120,45 +38,17 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
       return;
     }
 
-    setSubmitting(true);
+    const subject = `[FormatMD] ${requestHeading.trim()}`;
+    const body = `From: ${normalizedEmail}\n\n${description.trim()}`;
+    const mailtoUrl = `mailto:${FEEDBACK_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    try {
-      // Upload files to storage
-      const uploadedPaths: string[] = [];
-      for (const file of files) {
-        const uniqueId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        const safeName = file.name.replace(/[^\w.-]/g, '_');
-        const path = `feedback/${uniqueId}-${safeName}`;
-        const { error } = await supabase.storage.from('feedback-attachments').upload(path, file);
-        if (error) {
-          throw new Error(`Attachment upload failed for ${file.name}: ${error.message}`);
-        }
-        uploadedPaths.push(path);
-      }
+    window.location.href = mailtoUrl;
 
-      // Insert feedback
-      const { error } = await supabase.from('feedback').insert({
-        type: 'request',
-        email: normalizedEmail.slice(0, 254),
-        title: requestHeading.trim().slice(0, 200),
-        description: description.trim().slice(0, 2000),
-        attachments: uploadedPaths,
-      });
-
-      if (error) throw error;
-
-      toast.success('Request submitted! Thank you 🙏');
-      setEmail('');
-      setRequestHeading('');
-      setDescription('');
-      setFiles([]);
-      onOpenChange(false);
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to submit feedback');
-    } finally {
-      setSubmitting(false);
-    }
+    toast.success('Opening your email client…');
+    setEmail('');
+    setRequestHeading('');
+    setDescription('');
+    onOpenChange(false);
   };
 
   return (
@@ -174,7 +64,7 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
         <DialogHeader>
           <DialogTitle style={{ color: theme.colors.heading }}>Send a Request</DialogTitle>
           <DialogDescription style={{ color: theme.colors.text + '60' }}>
-            Share your request and we will review it quickly.
+            Submit opens your default mail client with the message pre-filled.
           </DialogDescription>
         </DialogHeader>
 
@@ -204,7 +94,7 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
                     color: theme.colors.text,
                   }}
                 >
-                  We do not spam or sell your data. We only use email updates for your request and spam prevention.
+                  Included in the email body so we can reply. Nothing is stored or transmitted by FormatMD itself.
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -260,58 +150,16 @@ const FeedbackModal = ({ open, onOpenChange, themeId = 'infiniti' }: FeedbackMod
           />
         </div>
 
-        {/* File upload */}
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept="image/*,.pdf,.txt,.log"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-mono transition-all"
-            style={{
-              border: `1px dashed ${theme.colors.heading}30`,
-              color: theme.colors.text + '60',
-            }}
-          >
-            <Upload className="w-3 h-3" />
-            Attach files (max 5MB each, up to 3)
-          </button>
-
-          {files.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {files.map((f, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-1 px-2 py-1 rounded text-xs font-mono"
-                  style={{ backgroundColor: theme.colors.panel, color: theme.colors.text + '80' }}
-                >
-                  {f.name.slice(0, 20)}
-                  <button type="button" onClick={() => removeFile(i)}>
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* Submit */}
         <Button
           onClick={handleSubmit}
-          disabled={submitting}
           className="w-full font-mono"
           style={{
             backgroundColor: theme.colors.heading,
             color: theme.colors.background,
           }}
         >
-          {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit'}
+          Open Email Client
         </Button>
       </DialogContent>
     </Dialog>
