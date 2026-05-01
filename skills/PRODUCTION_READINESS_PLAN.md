@@ -20,11 +20,8 @@
 - **Files**: Deployment config (`vercel.json`, `netlify.toml`, or equivalent)
 - **Effort**: Small
 
-### 1.3 Supabase Environment Validation
-- **Issue**: App may silently fail if Supabase env vars are missing.
-- **Fix**: Add runtime validation in `src/integrations/supabase/client.ts` — fail fast with clear error.
-- **Files**: `src/integrations/supabase/client.ts`
-- **Effort**: Small
+### 1.3 Supabase Environment Validation *(N/A — resolved)*
+- **Status**: Obsolete. Supabase has been removed from the project entirely. App is fully client-side with no environment variables required.
 
 ---
 
@@ -53,15 +50,12 @@
 
 ### 3.2 Bundle Size Optimization
 - **Issue**: Main chunk is 539KB (161KB gzip) — exceeds Vite's 500KB warning.
-- **Fix**: Code-split heavy paths. Consider lazy-loading `MarkdownToolbar` and Supabase client.
+- **Fix**: Code-split heavy paths. Consider lazy-loading `MarkdownToolbar`.
 - **Files**: `src/App.tsx`, `src/components/TerminalPreview.tsx`
 - **Effort**: Medium
 
-### 3.3 Image Compression Off Main Thread
-- **Issue**: Feedback modal compresses images synchronously on main thread.
-- **Fix**: Move canvas compression to a Web Worker or use `OffscreenCanvas`.
-- **Files**: `src/components/FeedbackModal.tsx`
-- **Effort**: Medium
+### 3.3 Image Compression Off Main Thread *(N/A — resolved)*
+- **Status**: Obsolete. The feedback modal now uses a `mailto:` link and no longer accepts attachments — image compression code was removed.
 
 ---
 
@@ -124,7 +118,6 @@
 - [ ] Phase 2 complete (stability)
 - [ ] Phase 3 items triaged (performance)
 - [ ] Phase 4: at least core logic tests passing
-- [ ] Supabase migration applied (`20260310124500_feedback_request_form.sql`)
 - [ ] Production domain confirmed and URLs updated
 - [ ] Manual smoke test: paste -> preview -> copy -> export (all formats)
 - [ ] Manual smoke test: feedback submission

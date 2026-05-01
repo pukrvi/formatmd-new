@@ -30,8 +30,7 @@ Static QA findings:
 - [ ] `PR-003` Route-level error boundaries
   - Prevent full-app blank screen on runtime exceptions.
 
-- [ ] `PR-004` Supabase env validation
-  - Fail fast if required env vars are missing/invalid.
+- [x] `PR-004` Supabase env validation — *N/A (Supabase removed; app is fully client-side)*
 
 - [ ] `PR-005` Lockfile reconciliation
   - Align lockfile with `package.json`; keep one package manager path.

@@ -1,6 +1,6 @@
 import { Theme, ThemeId } from '@/lib/themes';
-import { useRef, forwardRef, useImperativeHandle, useState, useCallback, useId, useMemo } from 'react';
-import { Copy, Check, ChevronDown, Download, Eye, Pencil, Columns2, Clock, Type, Hash, Sun, Moon } from 'lucide-react';
+import { useRef, forwardRef, useImperativeHandle, useState, useCallback, useEffect, useId, useMemo } from 'react';
+import { Copy, Check, ChevronDown, Download, Eye, Pencil, Columns2, Clock, Type, Hash, Sun, Moon, Lock, LockOpen } from 'lucide-react';
 import { useMarkdownPaste } from '@/hooks/useMarkdownPaste';
 import { markdownToStyledHtml } from '@/lib/markdownToHtml';
 import { exportFormats, exportAs, ExportFormatId } from '@/lib/exportService';
@@ -28,9 +28,12 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
   ({ markdown, theme, onCopy, isCopied, onThemeChange, activeThemeId, onReset, onMarkdownChange }, ref) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const editorRef = useRef<HTMLTextAreaElement>(null);
+    const previewPaneRef = useRef<HTMLDivElement>(null);
+    const isSyncingScroll = useRef(false);
 
     const [isDownloadOpen, setIsDownloadOpen] = useState(false);
     const [viewMode, setViewMode] = useState<ViewMode>('editor');
+    const [isScrollLocked, setIsScrollLocked] = useState(true);
     const editorId = useId().replace(/:/g, '');
     const editorClass = `editor-${editorId}`;
 
@@ -77,6 +80,50 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
 
     const showEditor = viewMode === 'editor' || viewMode === 'split';
     const showPreview = viewMode === 'preview' || viewMode === 'split';
+
+    // Sync scroll position proportionally between editor and preview when in split view + locked.
+    // The `isSyncingScroll` ref blocks the feedback scroll event the programmatic scroll triggers.
+    const syncScroll = useCallback(
+      (source: 'editor' | 'preview') => {
+        if (!isScrollLocked || viewMode !== 'split' || isSyncingScroll.current) return;
+        const editor = editorRef.current;
+        const preview = previewPaneRef.current;
+        if (!editor || !preview) return;
+
+        const editorMax = editor.scrollHeight - editor.clientHeight;
+        const previewMax = preview.scrollHeight - preview.clientHeight;
+
+        isSyncingScroll.current = true;
+        if (source === 'editor' && editorMax > 0) {
+          preview.scrollTop = (editor.scrollTop / editorMax) * previewMax;
+        } else if (source === 'preview' && previewMax > 0) {
+          editor.scrollTop = (preview.scrollTop / previewMax) * editorMax;
+        }
+        requestAnimationFrame(() => {
+          isSyncingScroll.current = false;
+        });
+      },
+      [isScrollLocked, viewMode]
+    );
+
+    // Bind native scroll listeners. React's onScroll prop is unreliable for divs when
+    // scrollTop is set programmatically — native listeners catch every scroll event.
+    useEffect(() => {
+      const editor = editorRef.current;
+      const preview = previewPaneRef.current;
+      if (!editor || !preview || viewMode !== 'split') return;
+
+      const onEditorScroll = () => syncScroll('editor');
+      const onPreviewScroll = () => syncScroll('preview');
+
+      editor.addEventListener('scroll', onEditorScroll, { passive: true });
+      preview.addEventListener('scroll', onPreviewScroll, { passive: true });
+
+      return () => {
+        editor.removeEventListener('scroll', onEditorScroll);
+        preview.removeEventListener('scroll', onPreviewScroll);
+      };
+    }, [syncScroll, viewMode]);
 
     const viewModes: { mode: ViewMode; icon: React.ReactNode; label: string }[] = [
       { mode: 'editor', icon: <Pencil className="w-3 h-3" />, label: 'Editor' },
@@ -160,7 +207,7 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
 
         {/* Toolbar row: formatting tools on left, action buttons on right */}
         {onMarkdownChange && (
-          <div className="flex items-center shrink-0 border-b h-10 relative z-10" style={{ borderColor: `${theme.colors.heading}15`, overflow: 'visible' }}>
+          <div className="flex items-center shrink-0 border-b h-10 relative z-10" style={{ borderColor: `${theme.colors.heading}15`, backgroundColor: theme.colors.panel + '30', overflow: 'visible' }}>
             <div className="flex-1 min-w-0" style={{ overflow: 'visible' }}>
               {showEditor && (
                 <MarkdownToolbar
@@ -198,6 +245,24 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
                       <Moon className="w-2 h-2" style={{ color: theme.colors.background }} />
                     )}
                   </div>
+                </button>
+              )}
+
+              {/* Scroll lock toggle — only in split view */}
+              {viewMode === 'split' && (
+                <button
+                  onClick={() => setIsScrollLocked((v) => !v)}
+                  className="h-6 flex items-center gap-1 px-2 rounded-md text-[11px] font-medium transition-all duration-200 hover:scale-105"
+                  style={{
+                    backgroundColor: isScrollLocked ? `${theme.colors.heading}25` : `${theme.colors.heading}15`,
+                    color: isScrollLocked ? theme.colors.heading : theme.colors.text + '90',
+                  }}
+                  title={isScrollLocked ? 'Scroll lock on — panes scroll together' : 'Scroll lock off — panes scroll independently'}
+                  aria-pressed={isScrollLocked}
+                  aria-label={isScrollLocked ? 'Disable scroll lock' : 'Enable scroll lock'}
+                >
+                  {isScrollLocked ? <Lock className="w-3 h-3" /> : <LockOpen className="w-3 h-3" />}
+                  <span className="hidden sm:inline">{isScrollLocked ? 'Locked' : 'Unlocked'}</span>
                 </button>
               )}
 
@@ -301,7 +366,10 @@ const TerminalPreview = forwardRef<TerminalPreviewRef, TerminalPreviewProps>(
 
           {/* Preview pane */}
           {showPreview && (
-            <div className={`${viewMode === 'split' ? 'w-1/2' : 'w-full'} overflow-auto custom-scrollbar`}>
+            <div
+              ref={previewPaneRef}
+              className={`${viewMode === 'split' ? 'w-1/2' : 'w-full'} overflow-auto custom-scrollbar`}
+            >
               <div
                 className="p-6 prose-custom"
                 style={{ color: theme.colors.text }}

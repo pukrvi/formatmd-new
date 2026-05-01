@@ -120,10 +120,10 @@ When your change affects documented behavior:
 
 ## Security
 
-- **No secrets in code** — use environment variables
-- **Sanitize user input** — especially for HTML rendering
+- **No secrets in code** — there are no environment variables to leak (the app is fully client-side with no backend)
+- **Sanitize user input** — especially for HTML rendering. The HTML→markdown converter normalizes Google Docs–style markup, then sanitizes through DOM construction
 - **OWASP awareness** — watch for XSS, injection, etc.
-- **RLS is the boundary** — Supabase anon keys are publishable; security comes from Row-Level Security policies
+- **No backend means no auth surface** — all state lives in browser memory + `localStorage`
 
 ---
 

@@ -66,6 +66,7 @@ The main editor/preview component. ~275 lines after refactoring.
 - Copy button with visual feedback
 - Download dropdown with format options
 - Theme toggle (Sun/Moon icon)
+- **Synced scrolling** in Split view with a Lock / Unlock toggle in the action area (default: locked)
 
 **Exposed via `useImperativeHandle`:**
 ```typescript
@@ -76,8 +77,9 @@ ref.current.getStyledHTML() // Returns rendered HTML string
 | State | Type | Default |
 |-------|------|---------|
 | `viewMode` | `'editor' \| 'split' \| 'preview'` | `'editor'` |
-| `showDropdown` | `boolean` | `false` |
-| `copied` | `boolean` | `false` (resets after 2s) |
+| `isDownloadOpen` | `boolean` | `false` |
+| `isScrollLocked` | `boolean` | `true` |
+| `isSyncingScroll` (ref) | `boolean` | `false` (guards feedback loop during sync) |
 
 ---
 
@@ -118,13 +120,13 @@ Unified request form displayed as a dialog overlay.
 | Email | Yes | Format check |
 | Heading | Yes | Non-empty |
 | Description | Yes | Non-empty |
-| Attachments | No | Max 3 files, 5MB each |
 
 **Behavior:**
-- Images compressed via canvas (JPEG, 70% quality) before upload
-- Files uploaded to Supabase Storage
-- Form data saved to Supabase `feedback` table
-- Toast notifications for success/error
+- Validates the three fields client-side
+- Builds a `mailto:pukrvi@gmail.com?subject=[FormatMD] {heading}&body=From: {email}\n\n{description}` URL
+- Sets `window.location.href` to the URL so the default mail client opens with the message pre-filled
+- Toast confirms "Opening your email client…"
+- No backend, no storage, no third-party services
 
 ---
 

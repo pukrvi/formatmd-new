@@ -816,6 +816,43 @@ Update this file after every completed process/task run.
   - **Stale Supabase mentions in long-form docs**: `docs/wiki/Architecture.md`, `Getting-Started.md`, `Changelog.md`, `Home.md`, `Contributing.md`, `FAQ.md`, `Features.md`, `Component-Reference.md`, `skills/PRODUCTION_READINESS_PLAN.md`, and `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md` still reference Supabase. Worth a follow-up cleanup pass.
   - PR notes from 2026-03-10 and earlier MEMORY change-log entries reference Supabase as historical record — left as-is (these are an audit trail of how the project evolved, not current docs).
 
+### 2026-05-01 — Synced scrolling, toolbar background fix, doc sweep
+- Task: Add scroll lock for Split view (default ON), fix toolbar row background mismatch, and bring all docs (homepage, on-page wiki, README, repo wiki, skills docs) up to date with the project's current shape.
+- Changes made:
+  - **Synced scrolling**:
+    - `src/components/TerminalPreview.tsx`: added `previewPaneRef`, `isScrollLocked` state (default `true`), `isSyncingScroll` ref, a `syncScroll(source)` callback that proportionally maps `scrollTop / scrollMax` between editor and preview, and a `useEffect` that attaches **native** scroll listeners on both panes (React's `onScroll` prop turned out to be unreliable for divs when scrollTop is set programmatically — native `addEventListener` catches every scroll). Lock toggle button added to the action area, visible only when `viewMode === 'split'`. Lock icon is `Lock`/`LockOpen` from lucide-react with active-state styling.
+    - User confirmed working in their browser; the preview-server eval environment doesn't fire scroll events for programmatic `scrollTop` assignments which created a false negative during automated verification.
+  - **Toolbar background fix**: lifted the `theme.colors.panel + '30'` tint from the inner `MarkdownToolbar` div up to the parent toolbar row in `TerminalPreview.tsx`, so both the formatting buttons (left) and action buttons (right) share one uniform background. Removes the visible color seam.
+  - **Documentation sweep** (no remaining live Supabase references — only historical changelog entries and N/A markers):
+    - `README.md`: added "Synced scrolling" + "Sticky header" + MIT-license bullets to features list.
+    - `src/components/DocumentationSection.tsx`: added a new "Synced Scroll" feature card under the Editor section.
+    - `src/lib/wikiContent.ts`: Editor page now documents the scroll-lock behavior with a behavior table.
+    - `docs/wiki/Architecture.md`: removed `integrations/supabase` from the source tree diagram and replaced the entire "Backend Integration (Supabase)" section with a "Backend Integration: None" section explaining the mailto-only feedback flow.
+    - `docs/wiki/Features.md`: rewrote the Feedback System table (no attachments, mailto behavior) and added a full "Synced Scroll (Split View)" section.
+    - `docs/wiki/Component-Reference.md`: rewrote the FeedbackModal behavior block (mailto), added scroll-lock state and ref to TerminalPreview's internal-state table, added "Synced scrolling" to its feature list.
+    - `docs/wiki/Changelog.md`: added a 2026-05-01 entry for this PR and a 2026-04-30 entry recapping the prior merged PR; annotated the old 2026-03-10 Supabase line as superseded.
+    - `docs/wiki/FAQ.md`: tech stack row now reads "no backend" and lists the new lib files (`exportService`, `clipboardService`, `markdownStats`, `useTheme`); removed the "don't edit generated supabase client" guardrail.
+    - `docs/wiki/Getting-Started.md`: replaced the env-vars section with a "no environment variables required" note.
+    - `docs/wiki/Home.md`: tech stack row now "Backend: None — fully client-side"; removed `integrations/` and `supabase/` from the repo structure block.
+    - `docs/wiki/Contributing.md`: replaced the "RLS is the boundary" security item with a "no backend means no auth surface" item.
+    - `skills/PRODUCTION_READINESS_PLAN.md`: marked Supabase env validation, image-compression off main thread, and the Supabase migration launch checklist item as obsolete (Supabase removed).
+    - `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`: marked PR-004 (Supabase env validation) as N/A.
+- Files touched:
+  - `src/components/TerminalPreview.tsx`, `src/components/DocumentationSection.tsx`
+  - `src/lib/wikiContent.ts`
+  - `README.md`
+  - `docs/wiki/Architecture.md`, `Features.md`, `Component-Reference.md`, `Changelog.md`, `FAQ.md`, `Getting-Started.md`, `Home.md`, `Contributing.md`
+  - `skills/PRODUCTION_READINESS_PLAN.md`, `skills/PROD_READY_PERFORMANCE_TECH_DEBT.md`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> 0 errors, 2 pre-existing warnings (shadcn primitives)
+  - `npm run test` -> 34/34 pass
+  - `npm run build` -> clean
+  - User confirmed scroll lock working in real browser.
+- Risks / follow-ups:
+  - The two pre-existing fast-refresh warnings in `src/components/ui/button.tsx` and `src/components/ui/sonner.tsx` remain (out of scope).
+  - `MarkdownToolbar.tsx` only had its inner background removed; the file still has `import { useState }` and other imports unchanged.
+
 ## Entry Template (use for every future update)
 - Date:
 - Task:
