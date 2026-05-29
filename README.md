@@ -1,6 +1,6 @@
 # FormatMD
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -182,8 +182,11 @@ Detailed project documentation lives in the `skills/` directory:
 
 ## License
 
-FormatMD is released under the [MIT License](./LICENSE) — © 2026 Puneet Vishnawat.
+FormatMD is released under the [Apache License 2.0](./LICENSE).
 
-You are free to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, subject to the conditions in the [LICENSE](./LICENSE) file. The software is provided "as is", without warranty of any kind.
+- **Created by:** Puneet Vishnawat
+- **Copyright © 2026:** INFINITIGRID TECHNOLOGIES (OPC) PRIVATE LIMITED. All rights reserved.
 
-> Open source licenses do not require registration. Including the LICENSE file with the canonical MIT text and a copyright line is sufficient — GitHub auto-detects it and surfaces the badge above. The SPDX identifier is `MIT`.
+You are free to **use, copy, modify, and distribute** the software — including for commercial purposes — subject to the terms in the [LICENSE](./LICENSE) and [NOTICE](./NOTICE) files. The Apache 2.0 License also grants an express **patent license** from contributors and requires preserving copyright and attribution notices in any redistribution. The software is provided "AS IS", without warranties of any kind.
+
+> The canonical Apache 2.0 text is in [`LICENSE`](./LICENSE); attribution lives in [`NOTICE`](./NOTICE). GitHub auto-detects both and surfaces the badge above. The SPDX identifier is `Apache-2.0`.

@@ -861,3 +861,31 @@ Update this file after every completed process/task run.
 - Validation run:
 - Browser check summary:
 - Risks / follow-ups:
+
+---
+
+## 2026-05-29 — Relicense MIT -> Apache 2.0
+- Date: 2026-05-29
+- Task: Switch the project license from MIT to Apache 2.0 and reassign copyright to INFINITIGRID TECHNOLOGIES (OPC) PRIVATE LIMITED while crediting Puneet Vishnawat as project creator.
+- Changes made:
+    - `LICENSE`: Replaced MIT text with the canonical Apache License 2.0 text and copyright line "Copyright 2026 INFINITIGRID TECHNOLOGIES (OPC) PRIVATE LIMITED".
+    - `NOTICE` (NEW): Apache 2.0 attribution file — copyright holder + "created by Puneet Vishnawat" credit + pointer to LICENSE-2.0 URL.
+    - `package.json`: SPDX field `MIT` -> `Apache-2.0`.
+    - `README.md`: License badge updated (MIT green -> Apache 2.0 blue) and the License section now lists Puneet Vishnawat as creator and INFINITIGRID TECHNOLOGIES (OPC) PRIVATE LIMITED as © holder, including the Apache 2.0 patent grant and NOTICE pointer.
+    - `src/lib/wikiContent.ts`: In-app `/docs` "License" page rewritten to describe Apache 2.0 rights, redistribution obligations (NOTICE preservation, modified-file callouts), and updated SPDX identifier to `Apache-2.0`.
+- Files touched:
+  - `LICENSE`
+  - `NOTICE` (NEW)
+  - `package.json`
+  - `README.md`
+  - `src/lib/wikiContent.ts`
+  - `MEMORY.md`
+- Validation run:
+  - `npm run lint` -> 0 errors, 2 pre-existing warnings (shadcn primitives, unchanged).
+  - `npm run test` -> 34/34 pass.
+  - `npm run build` -> clean (1.51s).
+- Browser check summary: Preview server (port 8080) at `/docs` -> License sidebar entry renders the new content: "Apache License 2.0" headline, "Created by: Puneet Vishnawat", "Copyright © 2026: INFINITIGRID TECHNOLOGIES (OPC) PRIVATE LIMITED", SPDX `Apache-2.0`, no console errors.
+- Risks / follow-ups:
+  - Relicensing from MIT to Apache 2.0 is permissive-to-permissive and not blocked by the original MIT terms, but historical commits remain under MIT — downstream forks that branched off the MIT history may continue under MIT for those revisions. New work on `main` is Apache 2.0.
+  - If contributors are added later, consider a CLA or DCO to keep the copyright assignment clean.
+  - SPDX identifier in any SBOM tooling should be refreshed: `Apache-2.0`.
