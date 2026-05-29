@@ -29,7 +29,7 @@ No sign-up. No install. No backend. Just paste and go.
 - **Live stats** — word count, character count, estimated reading time
 - **Feedback system** — unified request form that opens the user's default mail client with the message pre-filled (no backend)
 - **SEO-ready** — JSON-LD, Open Graph, Twitter Cards, sitemap, per-page meta tags
-- **MIT licensed** and fully open-source — see [LICENSE](./LICENSE)
+- **Apache 2.0 licensed** and fully open-source — see [LICENSE](./LICENSE)
 
 ---
 
